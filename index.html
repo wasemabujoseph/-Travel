@@ -1,944 +1,1296 @@
-import React, { useState, useEffect } from "react";
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diraasti – Tawjihi Gen 2008 (Smart + Gemini)</title>
 
-const App = () => {
-  // Language state
-  const [language, setLanguage] = useState('en');
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [subjectProgress, setSubjectProgress] = useState({});
-  const [notes, setNotes] = useState({});
-  const [examRecords, setExamRecords] = useState([]);
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  // Mock data for subjects
-  const subjects = {
-    en: [
-      { 
-        id: 1, 
-        name: "Chemistry", 
-        image: "https://placehold.co/300x200/6366f1/ffffff?text=Chemistry",
-        color: "from-blue-500 to-blue-700"
-      },
-      { 
-        id: 2, 
-        name: "Biology", 
-        image: "https://placehold.co/300x200/10b981/ffffff?text=Biology",
-        color: "from-green-500 to-green-700"
-      },
-      { 
-        id: 3, 
-        name: "Advanced English", 
-        image: "https://placehold.co/300x200/f59e0b/ffffff?text=Advanced+English",
-        color: "from-yellow-500 to-yellow-700"
-      },
-      { 
-        id: 4, 
-        name: "Mathematics", 
-        image: "https://placehold.co/300x200/ef4444/ffffff?text=Mathematics",
-        color: "from-red-500 to-red-700"
-      }
-    ],
-    ar: [
-      { 
-        id: 1, 
-        name: "الكيمياء", 
-        image: "https://placehold.co/300x200/6366f1/ffffff?text=الكيمياء",
-        color: "from-blue-500 to-blue-700"
-      },
-      { 
-        id: 2, 
-        name: "الأحياء", 
-        image: "https://placehold.co/300x200/10b981/ffffff?text=الأحياء",
-        color: "from-green-500 to-green-700"
-      },
-      { 
-        id: 3, 
-        name: "اللغة الإنجليزية المتقدمة", 
-        image: "https://placehold.co/300x200/f59e0b/ffffff?text=اللغة+الإنجليزية+المتقدمة",
-        color: "from-yellow-500 to-yellow-700"
-      },
-      { 
-        id: 4, 
-        name: "الرياضيات", 
-        image: "https://placehold.co/300x200/ef4444/ffffff?text=الرياضيات",
-        color: "from-red-500 to-red-700"
-      }
-    ]
-  };
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  // Subject details with comprehensive resources
-  const subjectDetails = {
-    1: {
-      en: {
-        keyTopics: [
-          { name: "Nuclear Chemistry", completed: true, needsReview: false },
-          { name: "Chemical Equilibrium", completed: true, needsReview: false },
-          { name: "Organic Chemistry", completed: false, needsReview: false },
-          { name: "Electrochemistry", completed: false, needsReview: true }
-        ],
-        resources: [
-          { name: "Chapter 1 Summary PDF", type: "file", url: "#" },
-          { name: "Past Exams Collection", type: "file", url: "#" },
-          { name: "Ministry Syllabus 2008", type: "file", url: "#" }
-        ],
-        videos: [
-          { name: "Chemical Equilibrium Explained - 12 min", url: "#" },
-          { name: "Solving Problem #5 - 8 min", url: "#" },
-          { name: "Organic Reactions Tutorial", url: "#" }
-        ],
-        schedule: "Every Wednesday 6-8 PM",
-        practiceStatus: "Solved 7 past papers"
-      },
-      ar: {
-        keyTopics: [
-          { name: "الكيمياء النووية", completed: true, needsReview: false },
-          { name: "التوازن الكيميائي", completed: true, needsReview: false },
-          { name: "الكيمياء العضوية", completed: false, needsReview: false },
-          { name: "الكهروكيمياء", completed: false, needsReview: true }
-        ],
-        resources: [
-          { name: "ملخص الفصل الأول", type: "file", url: "#" },
-          { name: "مجموعة نماذج الامتحانات", type: "file", url: "#" },
-          { name: "مقرر الوزارة 2008", type: "file", url: "#" }
-        ],
-        videos: [
-          { name: "شرح التوازن الكيميائي - 12 دقيقة", url: "#" },
-          { name: "حل مسألة رقم 5 - 8 دقائق", url: "#" },
-          { name: "دروس الكيمياء العضوية", url: "#" }
-        ],
-        schedule: "كل أربعاء 6-8 مساءً",
-        practiceStatus: "حلت 7 امتحانات سابقة"
-      }
-    },
-    2: {
-      en: {
-        keyTopics: [
-          { name: "Nervous System", completed: true, needsReview: false },
-          { name: "Genetics", completed: false, needsReview: false },
-          { name: "Evolution", completed: false, needsReview: true },
-          { name: "Ecology", completed: false, needsReview: false }
-        ],
-        resources: [
-          { name: "Nervous System Summary", type: "file", url: "#" },
-          { name: "Genetics Practice Problems", type: "file", url: "#" }
-        ],
-        videos: [
-          { name: "Central Nervous System - 15 min", url: "#" },
-          { name: "Genetics Basics Tutorial", url: "#" }
-        ],
-        schedule: "Every Tuesday & Thursday 5-7 PM",
-        practiceStatus: "Solved 5 past papers"
-      },
-      ar: {
-        keyTopics: [
-          { name: "الجهاز العصبي", completed: true, needsReview: false },
-          { name: "الوراثة", completed: false, needsReview: false },
-          { name: "التطور", completed: false, needsReview: true },
-          { name: "علم البيئة", completed: false, needsReview: false }
-        ],
-        resources: [
-          { name: "ملخص الجهاز العصبي", type: "file", url: "#" },
-          { name: "تمارين الوراثة", type: "file", url: "#" }
-        ],
-        videos: [
-          { name: "الجهاز العصبي المركزي - 15 دقيقة", url: "#" },
-          { name: "أساسيات الوراثة", url: "#" }
-        ],
-        schedule: "كل يوم ثلاثاء وخميس 5-7 مساءً",
-        practiceStatus: "حلت 5 امتحانات سابقة"
-      }
+  <!-- React & ReactDOM (CDN) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel (so we can write JSX in this file) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn .3s ease-in-out; }
+
+    .font-inter { font-family: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
+    .font-cairo { font-family: "Cairo", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; }
+
+    /* Monthly grid print styles (A3 Landscape) */
+    @media print {
+      @page { size: A3 landscape; margin: 10mm; }
+      .no-print { display: none !important; }
+      .print-bg { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: white !important; }
     }
-  };
 
-  // Initial exam records
-  useEffect(() => {
-    setExamRecords([
-      { subject: language === 'en' ? 'Chemistry' : 'الكيمياء', count: 7, rating: 'Excellent', date: '10/3/2026' },
-      { subject: language === 'en' ? 'Biology' : 'الأحياء', count: 5, rating: language === 'en' ? 'Needs Improvement' : 'يحتاج تحسين', date: '8/3/2026' }
-    ]);
-  }, [language]);
+    /* Make table compact & fixed layout */
+    .month-table { table-layout: fixed; border-collapse: collapse; width: 100%; }
+    .month-table th, .month-table td {
+      border: 1px solid rgba(100,116,139,0.35); /* slate-400-ish */
+      padding: 4px;
+      vertical-align: top;
+      min-width: 36px;
+      height: 28px;
+    }
+    .month-table th { background: rgba(226,232,240,0.6); } /* slate-200 */
+    .cell-edit { outline: none; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-  // Calculate progress for each subject
-  useEffect(() => {
-    const progress = {};
-    Object.keys(subjectDetails).forEach(key => {
-      const details = subjectDetails[key][language];
-      const total = details.keyTopics.length;
-      const completed = details.keyTopics.filter(t => t.completed).length;
-      progress[key] = {
-        completed: Math.round((completed / total) * 100),
-        completedCount: completed,
-        totalCount: total
-      };
-    });
-    setSubjectProgress(progress);
-  }, [language]);
+  <script type="text/babel">
+    const { useState, useEffect, useCallback, useMemo } = React;
 
-  // Handle language toggle
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'en' ? 'ar' : 'en');
-  };
-
-  // Get current subjects
-  const currentSubjects = subjects[language];
-
-  // Navigate to subject
-  const goToSubject = (subject) => {
-    setSelectedSubject(subject);
-    setActiveTab('courses');
-  };
-
-  // Back to dashboard
-  const goBack = () => {
-    setSelectedSubject(null);
-    setActiveTab('dashboard');
-  };
-
-  // Toggle topic completion
-  const toggleTopic = (subjectId, topicIndex) => {
-    const details = subjectDetails[subjectId][language];
-    const updatedTopics = [...details.keyTopics];
-    updatedTopics[topicIndex] = {
-      ...updatedTopics[topicIndex],
-      completed: !updatedTopics[topicIndex].completed
-    };
-    
-    // Update progress
-    const total = updatedTopics.length;
-    const completed = updatedTopics.filter(t => t.completed).length;
-    setSubjectProgress(prev => ({
-      ...prev,
-      [subjectId]: {
-        completed: Math.round((completed / total) * 100),
-        completedCount: completed,
-        totalCount: total
+    // -------------------- Subject Details (initial) --------------------
+    const INITIAL_SUBJECT_DETAILS = {
+      1: {
+        en: {
+          keyTopics: [
+            { id: 'nuclear', name: "Nuclear Chemistry", weight: 25, difficulty: 7, completed: true, needsReview: false, lastReviewed: '2024-01-15' },
+            { id: 'equilibrium', name: "Chemical Equilibrium", weight: 30, difficulty: 8, completed: true, needsReview: true, lastReviewed: '2024-01-10' },
+            { id: 'organic', name: "Organic Chemistry", weight: 20, difficulty: 9, completed: false, needsReview: false, lastReviewed: null },
+            { id: 'electro', name: "Electrochemistry", weight: 25, difficulty: 7, completed: false, needsReview: true, lastReviewed: null }
+          ],
+          resources: [
+            { id: 'summary1', name: "Chapter 1 Summary PDF", type: "summary", url: "#", size: "2.4 MB", downloads: 156 },
+            { id: 'pastpapers', name: "Past Exams Collection (2005-2008)", type: "exam", url: "#", size: "8.7 MB", downloads: 234 },
+            { id: 'formulas', name: "Complete Formula Sheet", type: "reference", url: "#", size: "1.2 MB", downloads: 189 },
+            { id: 'ministry', name: "Ministry Syllabus 2008", type: "syllabus", url: "#", size: "3.1 MB", downloads: 127 }
+          ],
+          videos: [
+            { id: 'v1', name: "Chemical Equilibrium Explained - 12 min", url: "#", views: 2340, rating: 4.8 },
+            { id: 'v2', name: "Solving Problem #5 - 8 min", url: "#", views: 1876, rating: 4.6 },
+            { id: 'v3', name: "Organic Reactions Tutorial", url: "#", views: 3124, rating: 4.9 },
+            { id: 'v4', name: "Exam Strategy: Time Management", url: "#", views: 1567, rating: 4.7 }
+          ],
+          schedule: "Every Wednesday 6-8 PM",
+          practiceStatus: "Solved 7 past papers",
+          targetDate: "2024-04-15",
+          weeklyGoal: "3 study sessions"
+        },
+        ar: {
+          keyTopics: [
+            { id: 'nuclear', name: "الكيمياء النووية", weight: 25, difficulty: 7, completed: true, needsReview: false, lastReviewed: '2024-01-15' },
+            { id: 'equilibrium', name: "التوازن الكيميائي", weight: 30, difficulty: 8, completed: true, needsReview: true, lastReviewed: '2024-01-10' },
+            { id: 'organic', name: "الكيمياء العضوية", weight: 20, difficulty: 9, completed: false, needsReview: false, lastReviewed: null },
+            { id: 'electro', name: "الكهروكيمياء", weight: 25, difficulty: 7, completed: false, needsReview: true, lastReviewed: null }
+          ],
+          resources: [
+            { id: 'summary1', name: "ملخص الفصل الأول", type: "summary", url: "#", size: "2.4 ميغابايت", downloads: 156 },
+            { id: 'pastpapers', name: "مجموعة نماذج الامتحانات (2005-2008)", type: "exam", url: "#", size: "8.7 ميغابايت", downloads: 234 },
+            { id: 'formulas', name: "ورقة الصيغ الكاملة", type: "reference", url: "#", size: "1.2 ميغابايت", downloads: 189 },
+            { id: 'ministry', name: "مقرر الوزارة 2008", type: "syllabus", url: "#", size: "3.1 ميغابايت", downloads: 127 }
+          ],
+          videos: [
+            { id: 'v1', name: "شرح التوازن الكيميائي - 12 دقيقة", url: "#", views: 2340, rating: 4.8 },
+            { id: 'v2', name: "حل مسألة رقم 5 - 8 دقائق", url: "#", views: 1876, rating: 4.6 },
+            { id: 'v3', name: "دروس الكيمياء العضوية", url: "#", views: 3124, rating: 4.9 },
+            { id: 'v4', name: "استراتيجية الامتحان: إدارة الوقت", url: "#", views: 1567, rating: 4.7 }
+          ],
+          schedule: "كل أربعاء 6-8 مساءً",
+          practiceStatus: "حلت 7 امتحانات سابقة",
+          targetDate: "2024-04-15",
+          weeklyGoal: "3 جلسات دراسة"
+        }
+      },
+      2: {
+        en: {
+          keyTopics: [
+            { id: 'nervous', name: "Nervous System", weight: 35, difficulty: 6, completed: true, needsReview: false, lastReviewed: '2024-01-14' },
+            { id: 'genetics', name: "Genetics", weight: 30, difficulty: 8, completed: false, needsReview: false, lastReviewed: null },
+            { id: 'evolution', name: "Evolution", weight: 20, difficulty: 7, completed: false, needsReview: true, lastReviewed: null },
+            { id: 'ecology', name: "Ecology", weight: 15, difficulty: 5, completed: false, needsReview: false, lastReviewed: null }
+          ],
+          resources: [
+            { id: 'nervous_summary', name: "Nervous System Summary", type: "summary", url: "#", size: "1.8 MB", downloads: 198 },
+            { id: 'genetics_problems', name: "Genetics Practice Problems", type: "exercise", url: "#", size: "2.1 MB", downloads: 167 },
+            { id: 'diagrams', name: "Anatomy Diagrams Collection", type: "visual", url: "#", size: "4.3 MB", downloads: 212 }
+          ],
+          videos: [
+            { id: 'v5', name: "Central Nervous System - 15 min", url: "#", views: 2890, rating: 4.7 },
+            { id: 'v6', name: "Genetics Basics Tutorial", url: "#", views: 3245, rating: 4.9 },
+            { id: 'v7', name: "Evolution Evidence Explained", url: "#", views: 1987, rating: 4.6 }
+          ],
+          schedule: "Every Tuesday & Thursday 5-7 PM",
+          practiceStatus: "Solved 5 past papers",
+          targetDate: "2024-04-10",
+          weeklyGoal: "4 study sessions"
+        },
+        ar: {
+          keyTopics: [
+            { id: 'nervous', name: "الجهاز العصبي", weight: 35, difficulty: 6, completed: true, needsReview: false, lastReviewed: '2024-01-14' },
+            { id: 'genetics', name: "الوراثة", weight: 30, difficulty: 8, completed: false, needsReview: false, lastReviewed: null },
+            { id: 'evolution', name: "التطور", weight: 20, difficulty: 7, completed: false, needsReview: true, lastReviewed: null },
+            { id: 'ecology', name: "علم البيئة", weight: 15, difficulty: 5, completed: false, needsReview: false, lastReviewed: null }
+          ],
+          resources: [
+            { id: 'nervous_summary', name: "ملخص الجهاز العصبي", type: "summary", url: "#", size: "1.8 ميغابايت", downloads: 198 },
+            { id: 'genetics_problems', name: "تمارين الوراثة", type: "exercise", url: "#", size: "2.1 ميغابايت", downloads: 167 },
+            { id: 'diagrams', name: "مجموعة الرسوم التشريحية", type: "visual", url: "#", size: "4.3 ميغابايت", downloads: 212 }
+          ],
+          videos: [
+            { id: 'v5', name: "الجهاز العصبي المركزي - 15 دقيقة", url: "#", views: 2890, rating: 4.7 },
+            { id: 'v6', name: "أساسيات الوراثة", url: "#", views: 3245, rating: 4.9 },
+            { id: 'v7', name: "أدلة التطور المفسرة", url: "#", views: 1987, rating: 4.6 }
+          ],
+          schedule: "كل يوم ثلاثاء وخميس 5-7 مساءً",
+          practiceStatus: "حلت 5 امتحانات سابقة",
+          targetDate: "2024-04-10",
+          weeklyGoal: "4 جلسات دراسة"
+        }
       }
-    }));
-  };
+    };
 
-  // Add note
-  const addNote = (subjectId, note) => {
-    setNotes(prev => ({
-      ...prev,
-      [subjectId]: [...(prev[subjectId] || []), note]
-    }));
-  };
+    // -------------------- Monthly Quotes (Aug 2025 → Aug 2026) --------------------
+    const MONTH_QUOTES_AR = {
+      "2025-08": "ابدأ اليوم، فالساعة التي تؤجلها لن تعود.",
+      "2025-09": "القمة لا تُبنى بليلة، بل بساعات السحر.",
+      "2025-10": "كل يوم يمر، والساعة التي لم تدرسها، تُقربك من الندم.",
+      "2025-11": "النجاح لا يُقاس بالذكاء، بل بالساعات التي لم يراك أحد تدرس فيها.",
+      "2025-12": "الشتاء بارد، لكن إرادتك أشد حرارة.",
+      "2026-01": "عام جديد، وعزم أقوى. كل ساعة تُحسب.",
+      "2026-02": "لا تنتظر الهمة، ابدأ، والهمة ستجري وراءك.",
+      "2026-03": "الرحلة إلى توجيهي مثل السلم، كل ساعة دراسة هي درجة صعود.",
+      "2026-04": "اقرب من الهدف، لا تتوقف الآن. كل ساعة تُحدث فرقًا.",
+      "2026-05": "الامتحانات قريبة، والوقت لا يرحم. استغل كل لحظة.",
+      "2026-06": "هذا هو الشهر الحاسم. كل ساعة دراسة = خطوة نحو النجاح.",
+      "2026-07": "آخر خطوة قبل القمة هي الأصعب. لا تتوقف في الساعات الأخيرة.",
+      "2026-08": "تهانينا! لقد وصلت. كل ساعة دراسة كانت تستحق."
+    };
 
-  // Direction and text alignment
-  const dir = language === 'ar' ? 'rtl' : 'ltr';
-  const textAlign = language === 'ar' ? 'text-right' : 'text-left';
-  const flexRow = language === 'ar' ? 'flex-row-reverse' : 'flex-row';
-  const spaceX = language === 'ar' ? 'space-x-reverse' : 'space-x';
+    // -------------------- Helpers --------------------
+    function daysInMonth(year, monthIndex0) {
+      return new Date(year, monthIndex0 + 1, 0).getDate();
+    }
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function monthKey(y, m) { return `${y}-${pad2(m)}`; } // YYYY-MM
+    function weekdayName(d, lang) {
+      const namesEn = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      const namesAr = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+      return lang === 'ar' ? namesAr[d] : namesEn[d];
+    }
+    function monthName(y, m, lang) {
+      const namesEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+      const namesAr = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+      return (lang === 'ar' ? namesAr[m-1] : namesEn[m-1]) + (lang === 'ar' ? ` ${y}` : ` ${y}`);
+    }
 
-  return (
-    <div dir={dir} className={`${language === 'ar' ? 'font-cairo' : 'font-inter'} min-h-screen bg-gradient-to-br from-slate-50 to-slate-100`}>
-      {/* Navigation */}
-      <nav className="bg-white shadow-lg sticky top-0 z-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">D</span>
+    // -------------------- App --------------------
+    function App() {
+      // Language and theme
+      const [language, setLanguage] = useState('en');
+      const [darkMode, setDarkMode] = useState(false);
+      const [activeTab, setActiveTab] = useState('dashboard');
+      const [selectedSubject, setSelectedSubject] = useState(null);
+
+      // Data/state
+      const [studySessions, setStudySessions] = useState([]);
+      const [examRecords, setExamRecords] = useState([]);
+      const [aiSuggestions, setAiSuggestions] = useState([]);
+      const [showNotification, setShowNotification] = useState(false);
+      const [notificationMessage, setNotificationMessage] = useState('');
+
+      // subjectDetails in STATE
+      const [subjectDetails, setSubjectDetails] = useState(() => INITIAL_SUBJECT_DETAILS);
+
+      // ===== Subjects (removed Mathematics — 4 total) =====
+      const subjectsData = useMemo(() => ({
+        en: [
+          { id: 1, name: "Chemistry", image: "https://placehold.co/300x200/6366f1/ffffff?text=Chemistry", color: "from-blue-500 to-blue-700", icon: "🧪" },
+          { id: 2, name: "Biology", image: "https://placehold.co/300x200/10b981/ffffff?text=Biology", color: "from-green-500 to-green-700", icon: "🧬" },
+          { id: 3, name: "Advanced English", image: "https://placehold.co/300x200/f59e0b/ffffff?text=Advanced+English", color: "from-yellow-500 to-yellow-700", icon: "📘" },
+          { id: 5, name: "Physics", image: "https://placehold.co/300x200/8b5cf6/ffffff?text=Physics", color: "from-purple-500 to-purple-700", icon: "⚡" }
+        ],
+        ar: [
+          { id: 1, name: "الكيمياء", image: "https://placehold.co/300x200/6366f1/ffffff?text=الكيمياء", color: "from-blue-500 to-blue-700", icon: "🧪" },
+          { id: 2, name: "الأحياء", image: "https://placehold.co/300x200/10b981/ffffff?text=الأحياء", color: "from-green-500 to-green-700", icon: "🧬" },
+          { id: 3, name: "اللغة الإنجليزية المتقدمة", image: "https://placehold.co/300x200/f59e0b/ffffff?text=الإنجليزية+المتقدمة", color: "from-yellow-500 to-yellow-700", icon: "📘" },
+          { id: 5, name: "الفيزياء", image: "https://placehold.co/300x200/8b5cf6/ffffff?text=الفيزياء", color: "from-purple-500 to-purple-700", icon: "⚡" }
+        ]
+      }), []);
+
+      // Initialize mock data and suggestions on language change
+      useEffect(() => {
+        setStudySessions([
+          { id: 1, subject: language === 'en' ? 'Chemistry' : 'الكيمياء', date: '2024-01-15', duration: 120, topic: language==='en'?'Chemical Equilibrium':'التوازن الكيميائي', completed: true },
+          { id: 2, subject: language === 'en' ? 'Biology' : 'الأحياء', date: '2024-01-14', duration: 90, topic: language==='en'?'Nervous System':'الجهاز العصبي', completed: true },
+          { id: 3, subject: language === 'en' ? 'Chemistry' : 'الكيمياء', date: '2024-01-10', duration: 150, topic: language==='en'?'Nuclear Chemistry':'الكيمياء النووية', completed: true },
+          { id: 4, subject: language === 'en' ? 'Advanced English' : 'اللغة الإنجليزية المتقدمة', date: '2024-01-09', duration: 60, topic: language==='en'?'Essay Writing':'كتابة المقال', completed: true }
+        ]);
+
+        setExamRecords([
+          { id: 1, subject: language === 'en' ? 'Chemistry' : 'الكيمياء', count: 7, rating: language==='en'?'Excellent':'ممتاز', date: '2024-01-15', score: 92 },
+          { id: 2, subject: language === 'en' ? 'Biology' : 'الأحياء', count: 5, rating: language==='en'?'Good':'جيد', date: '2024-01-10', score: 85 },
+          { id: 3, subject: language === 'en' ? 'Advanced English' : 'اللغة الإنجليزية المتقدمة', count: 4, rating: language==='en'?'Good':'جيد', date: '2024-01-08', score: 88 }
+        ]);
+
+        generateAiSuggestions();
+      }, [language]); // eslint-disable-line
+
+      // AI suggestions based on subjectDetails & sessions (local smartness)
+      const generateAiSuggestions = useCallback(() => {
+        const suggestions = [];
+
+        Object.keys(subjectDetails).forEach(subjectId => {
+          if (!subjectDetails[subjectId]?.[language]) return;
+          const details = subjectDetails[subjectId][language];
+          const needsReview = details.keyTopics.filter(t => t.needsReview && !t.completed);
+          if (needsReview.length > 0) {
+            suggestions.push({
+              id: `review_${subjectId}`,
+              type: 'review',
+              message: language === 'en'
+                ? `Review recommended: ${needsReview[0].name} in ${details.keyTopics[0].name}`
+                : `توصية بمراجعة: ${needsReview[0].name} في ${details.keyTopics[0].name}`,
+              priority: 'high',
+              action: language==='en' ? 'Review Now' : 'راجع الآن'
+            });
+          }
+        });
+
+        const today = new Date();
+        Object.keys(subjectDetails).forEach(subjectId => {
+          if (!subjectDetails[subjectId]?.[language]) return;
+          const details = subjectDetails[subjectId][language];
+          const overdue = details.keyTopics.filter(t => t.lastReviewed && (today - new Date(t.lastReviewed)) / (1000*60*60*24) > 7);
+          if (overdue.length) {
+            suggestions.push({
+              id: `overdue_${subjectId}`,
+              type: 'overdue',
+              message: language === 'en'
+                ? `It's been over a week since you reviewed ${overdue[0].name}`
+                : `لقد مر أكثر من أسبوع منذ مراجعتك لـ ${overdue[0].name}`,
+              priority: 'medium',
+              action: language==='en' ? 'Schedule Review' : 'جدولة مراجعة'
+            });
+          }
+        });
+
+        const totalSessions = studySessions.filter(s => s.date >= '2024-01-01').length;
+        if (totalSessions < 10) {
+          suggestions.push({
+            id: 'progress',
+            type: 'progress',
+            message: language === 'en'
+              ? "You're on track! Keep up the consistent study schedule."
+              : 'أنت على المسار الصحيح! استمر في الجدول الدراسي المنتظم.',
+            priority: 'low',
+            action: language==='en' ? 'View Plan' : 'عرض الخطة'
+          });
+        }
+
+        setAiSuggestions(suggestions);
+      }, [language, studySessions, subjectDetails]);
+
+      // Progress derived from subjectDetails
+      const subjectProgress = useMemo(() => {
+        const progress = {};
+        Object.keys(subjectDetails).forEach(key => {
+          if (!subjectDetails[key]?.[language]) return;
+          const details = subjectDetails[key][language];
+          const total = details.keyTopics.length;
+          const completed = details.keyTopics.filter(t => t.completed).length;
+          const weightedScore = details.keyTopics.reduce((sum, t) => sum + (t.completed ? t.weight : 0), 0);
+          progress[key] = {
+            completed: Math.round((completed / total) * 100),
+            completedCount: completed,
+            totalCount: total,
+            weightedScore: Math.round(weightedScore),
+            needsReview: details.keyTopics.filter(t => t.needsReview).length
+          };
+        });
+        return progress;
+      }, [language, subjectDetails]);
+
+      // Analytics
+      const analytics = useMemo(() => {
+        const totalStudyTime = studySessions.reduce((sum, s) => sum + s.duration, 0);
+        const avgSessionLength = studySessions.length > 0 ? Math.round(totalStudyTime / studySessions.length) : 0;
+        const subjectsStudied = new Set(studySessions.map(s => s.subject)).size;
+        const totalExams = examRecords.reduce((sum, r) => sum + r.count, 0);
+        const avgScore = examRecords.length > 0 ? Math.round(examRecords.reduce((sum, r) => sum + r.score, 0) / examRecords.length) : 0;
+        return {
+          totalStudyTime,
+          avgSessionLength,
+          subjectsStudied,
+          totalExams,
+          avgScore,
+          weeklyTrend: [
+            { week: 'Week 1', hours: 8 },
+            { week: 'Week 2', hours: 12 },
+            { week: 'Week 3', hours: 15 },
+            { week: 'Week 4', hours: 18 }
+          ]
+        };
+      }, [studySessions, examRecords]);
+
+      // Actions
+      const toggleLanguage = () => { setLanguage(prev => prev === 'en' ? 'ar' : 'en'); setTimeout(generateAiSuggestions, 100); };
+      const toggleDarkMode = () => setDarkMode(prev => !prev);
+      const goToSubject = (subject) => { setSelectedSubject(subject); setActiveTab('courses'); };
+      const goBack = () => { setSelectedSubject(null); setActiveTab('dashboard'); };
+
+      const toggleTopic = (subjectId, topicId) => {
+        setSubjectDetails(prev => {
+          const langBlock = prev[subjectId][language];
+          const idx = langBlock.keyTopics.findIndex(t => t.id === topicId);
+          if (idx === -1) return prev;
+          const current = langBlock.keyTopics[idx];
+          const updatedTopics = langBlock.keyTopics.map((t, i) =>
+            i === idx
+              ? { ...t, completed: !t.completed, lastReviewed: !t.completed ? new Date().toISOString().split('T')[0] : null }
+              : t
+          );
+          const next = {
+            ...prev,
+            [subjectId]: {
+              ...prev[subjectId],
+              [language]: { ...langBlock, keyTopics: updatedTopics }
+            }
+          };
+          showNotificationMessage(language === 'en'
+            ? `Topic "${current.name}" marked as ${!current.completed ? 'completed' : 'incomplete'}`
+            : `تم تحديد الموضوع "${current.name}" كـ ${!current.completed ? 'مكتمل' : 'غير مكتمل'}`
+          );
+          return next;
+        });
+      };
+
+      const markTopicForReview = (subjectId, topicId) => {
+        setSubjectDetails(prev => {
+          const langBlock = prev[subjectId][language];
+          const idx = langBlock.keyTopics.findIndex(t => t.id === topicId);
+          if (idx === -1) return prev;
+          const current = langBlock.keyTopics[idx];
+          const updatedTopics = langBlock.keyTopics.map((t, i) =>
+            i === idx ? ({ ...t, needsReview: !t.needsReview }) : t
+          );
+          const next = {
+            ...prev,
+            [subjectId]: {
+              ...prev[subjectId],
+              [language]: { ...langBlock, keyTopics: updatedTopics }
+            }
+          };
+          showNotificationMessage(language === 'en'
+            ? `Review flag ${!current.needsReview ? 'added to' : 'removed from'} ${current.name}`
+            : `تم ${!current.needsReview ? 'إضافة' : 'إزالة'} علامة المراجعة من ${current.name}`
+          );
+          return next;
+        });
+      };
+
+      const showNotificationMessage = (message) => {
+        setNotificationMessage(message);
+        setShowNotification(true);
+        setTimeout(() => setShowNotification(false), 3000);
+      };
+
+      const addStudySession = (sessionData) => {
+        const newSession = { id: studySessions.length + 1, ...sessionData, date: new Date().toISOString().split('T')[0] };
+        setStudySessions(prev => [...prev, newSession]);
+        showNotificationMessage(language === 'en' ? 'Study session added successfully!' : 'تمت إضافة جلسة الدراسة بنجاح!');
+      };
+
+      const addExamRecord = (examData) => {
+        const newRecord = { id: examRecords.length + 1, ...examData, date: new Date().toISOString().split('T')[0] };
+        setExamRecords(prev => [...prev, newRecord]);
+        showNotificationMessage(language === 'en' ? 'Exam record added successfully!' : 'تمت إضافة سجل الامتحان بنجاح!');
+      };
+
+      // Direction helpers
+      const dir = language === 'ar' ? 'rtl' : 'ltr';
+      const textAlign = language === 'ar' ? 'text-right' : 'text-left';
+
+      // -------------------- Gemini API wiring (client-side) --------------------
+      const [apiKey, setApiKey] = useState(localStorage.getItem('gemini_api_key') || '');
+      const [aiInput, setAiInput] = useState('');
+      const [aiUseContext, setAiUseContext] = useState(true);
+      const [aiModel, setAiModel] = useState('gemini-1.5-flash-latest');
+      const [aiLoading, setAiLoading] = useState(false);
+      const [aiOutput, setAiOutput] = useState('');
+
+      const saveKey = () => {
+        localStorage.setItem('gemini_api_key', apiKey.trim());
+        showNotificationMessage(language==='en' ? 'Gemini API key saved locally.' : 'تم حفظ مفتاح Gemini محليًا.');
+      };
+
+      async function callGemini(prompt, contextText='') {
+        const key = localStorage.getItem('gemini_api_key');
+        if (!key) throw new Error(language==='en' ? 'Please save your Gemini API key first.' : 'يرجى حفظ مفتاح Gemini أولاً.');
+        const body = {
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt + (contextText ? `\n\nContext:\n${contextText}` : '') }]
+            }
+          ]
+        };
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${aiModel}:generateContent?key=${encodeURIComponent(key)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (!resp.ok) {
+          const t = await resp.text();
+          throw new Error(`HTTP ${resp.status}: ${t}`);
+        }
+        const data = await resp.json();
+        const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('') || '';
+        return text;
+      }
+
+      const buildContext = () => {
+        // Keep it compact
+        const prog = Object.entries(subjectProgress).map(([id, p]) => ({ id, completed: p?.completed, needReview: p?.needsReview }));
+        const exams = examRecords.map(r => ({ subject: r.subject, score: r.score, count: r.count }));
+        const sessions = studySessions.slice(-6); // latest only
+        return JSON.stringify({ language, prog, exams, sessions }, null, 2);
+      };
+
+      const handleAskAI = async () => {
+        try {
+          setAiLoading(true);
+          const basePrompt = language==='en'
+            ? `You are a study coach for Tawjihi (Generation 2008). Give a concrete, weekly plan for the next 7 days, with time-budget per subject, specific topics to review, and 3 exam-style drills. Be concise and bullet-pointed.`
+            : `أنت مدرب دراسة لتوجيهي (جيل 2008). قدّم خطة أسبوعية واضحة للأيام السبعة القادمة تشمل توزيع الوقت لكل مادة، مواضيع محددة للمراجعة، و3 تمارين شبيهة بالامتحان. كن موجزًا ومنظمًا بنقاط.`;
+          const prompt = aiInput.trim() ? aiInput.trim() : basePrompt;
+          const context = aiUseContext ? buildContext() : '';
+          const out = await callGemini(prompt, context);
+          setAiOutput(out || (language==='en' ? "No response." : "لا يوجد رد."));
+        } catch (e) {
+          setAiOutput(String(e.message || e));
+        } finally {
+          setAiLoading(false);
+        }
+      };
+
+      // -------------------- Monthly Grid State --------------------
+      const today = new Date();
+      const [gridYear, setGridYear] = useState(2025);
+      const [gridMonth, setGridMonth] = useState(8); // 1-12
+      const gridKey = monthKey(gridYear, gridMonth);
+
+      const [gridData, setGridData] = useState(() => {
+        // load from localStorage
+        const raw = localStorage.getItem('monthgrid_' + gridKey);
+        return raw ? JSON.parse(raw) : {};
+      });
+
+      useEffect(() => {
+        const raw = localStorage.getItem('monthgrid_' + gridKey);
+        setGridData(raw ? JSON.parse(raw) : {});
+      }, [gridYear, gridMonth]);
+
+      const saveGrid = () => {
+        localStorage.setItem('monthgrid_' + gridKey, JSON.stringify(gridData));
+        showNotificationMessage(language==='en' ? 'Month saved locally.' : 'تم حفظ الشهر محليًا.');
+      };
+      const clearGrid = () => {
+        setGridData({});
+        localStorage.removeItem('monthgrid_' + gridKey);
+        showNotificationMessage(language==='en' ? 'Cleared.' : 'تم المسح.');
+      };
+      const handleCellChange = (day, hour, value) => {
+        setGridData(prev => {
+          const key = `${day}-${hour}`;
+          const next = { ...prev, [key]: value };
+          return next;
+        });
+      };
+      const printMonth = () => window.print();
+
+      // Build days list for select (Aug 2025 → Aug 2026)
+      const monthOptions = [];
+      {
+        let y = 2025, m = 8;
+        while (y < 2026 || (y === 2026 && m <= 8)) {
+          monthOptions.push({ y, m });
+          m++;
+          if (m === 13) { m = 1; y++; }
+        }
+      }
+
+      // UI strings
+      const t = (en, ar) => language === 'ar' ? ar : en;
+
+      return (
+        <div
+          dir={dir}
+          className={`${language === 'ar' ? 'font-cairo' : 'font-inter'} min-h-screen transition-colors duration-300 ${
+            darkMode ? 'bg-gradient-to-br from-slate-900 to-slate-800 text-white' : 'bg-gradient-to-br from-slate-50 to-slate-100 text-slate-900'
+          }`}
+        >
+          {/* Notification Toast */}
+          {showNotification && (
+            <div className="fixed top-20 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in">
+              {notificationMessage}
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav className={`sticky top-0 z-50 border-b transition-colors duration-300 ${
+            darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white shadow-lg border-slate-200'
+          }`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">D</span>
+                  </div>
+                  <div>
+                    <h1 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                      {t('Diraasti – Tawjihi Generation 2008','دراستي – توجيهي جيل ٢٠٠٨')}
+                    </h1>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={toggleDarkMode}
+                    className={`p-2 rounded-lg transition-colors duration-200 ${
+                      darkMode ? 'bg-slate-700 hover:bg-slate-600 text-yellow-300' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                    }`}
+                    aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {darkMode ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    onClick={toggleLanguage}
+                    className={`px-4 py-2 rounded-lg transition-colors duration-200 font-medium flex items-center space-x-2 ${
+                      darkMode ? 'bg-slate-700 hover:bg-slate-600 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                    }`}
+                    aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+                  >
+                    <span>{language === 'en' ? 'العربية' : 'English'}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                  </button>
+                </div>
               </div>
+            </div>
+          </nav>
+
+          {/* Mobile Tabs */}
+          <div className={`md:hidden border-b transition-colors duration-300 ${darkMode ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-white'}`}>
+            <div className="flex">
+              {[
+                { id: 'dashboard', label: t('Home','الرئيسية'), icon: '🏠' },
+                { id: 'courses', label: t('Courses','المواد'), icon: '📚' },
+                { id: 'planner', label: t('Planner','الجدول'), icon: '🕒' },
+                { id: 'stats', label: t('Stats','الإحصائيات'), icon: '📊' },
+                { id: 'ai', label: t('AI','الذكاء الاصطناعي'), icon: '💡' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 ${
+                    activeTab === tab.id
+                      ? darkMode ? 'text-blue-400 border-b-2 border-blue-400' : 'text-blue-600 border-b-2 border-blue-600'
+                      : darkMode ? 'text-slate-400 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  <span className="flex flex-col items-center">
+                    <span className="text-lg">{tab.icon}</span>
+                    <span className="text-xs mt-1">{tab.label}</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Desktop Tabs */}
+            <div className="hidden md:flex mb-8 space-x-1">
+              {[
+                { id: 'dashboard', label: t('Home','الرئيسية'), icon: '🏠' },
+                { id: 'courses', label: t('Courses','المواد'), icon: '📚' },
+                { id: 'planner', label: t('Planner','الجدول'), icon: '🕒' },
+                { id: 'stats', label: t('Stats','الإحصائيات'), icon: '📊' },
+                { id: 'ai', label: t('AI','الذكاء الاصطناعي'), icon: '💡' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
+                    activeTab === tab.id
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : darkMode ? 'text-slate-300 hover:text-white hover:bg-slate-700' : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* === DASHBOARD === */}
+            {activeTab === 'dashboard' && !selectedSubject && (
               <div>
-                <h1 className={`text-xl font-bold text-slate-800 ${language === 'ar' ? 'font-cairo' : 'font-inter'}`}>
-                  {language === 'ar' ? 'دراستي – توجيهي جيل ٢٠٠٨' : 'Diraasti – Tawjihi Generation 2008'}
-                </h1>
-              </div>
-            </div>
-            <button
-              onClick={toggleLanguage}
-              className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg transition-colors duration-200 font-medium flex items-center space-x-2"
-              aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
-            >
-              <span>{language === 'en' ? 'العربية' : 'English'}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Tab Navigation */}
-      <div className="md:hidden bg-white border-b border-slate-200">
-        <div className="flex">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 ${
-              activeTab === 'dashboard' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {language === 'ar' ? 'الرئيسية' : 'Home'}
-          </button>
-          <button
-            onClick={() => setActiveTab('courses')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 ${
-              activeTab === 'courses' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {language === 'ar' ? 'المواد' : 'Courses'}
-          </button>
-          <button
-            onClick={() => setActiveTab('planner')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 ${
-              activeTab === 'planner' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {language === 'ar' ? 'الجدول' : 'Planner'}
-          </button>
-          <button
-            onClick={() => setActiveTab('stats')}
-            className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 ${
-              activeTab === 'stats' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {language === 'ar' ? 'الإحصائيات' : 'Stats'}
-          </button>
-        </div>
-      </div>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Desktop Tab Navigation */}
-        <div className="hidden md:flex mb-8 space-x-1">
-          {[
-            { id: 'dashboard', label: language === 'ar' ? 'الرئيسية' : 'Home', icon: '🏠' },
-            { id: 'courses', label: language === 'ar' ? 'المواد' : 'Courses', icon: '📚' },
-            { id: 'planner', label: language === 'ar' ? 'الجدول' : 'Planner', icon: '🕒' },
-            { id: 'stats', label: language === 'ar' ? 'الإحصائيات' : 'Stats', icon: '📊' }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
-                activeTab === tab.id
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-slate-600 hover:text-slate-800 hover:bg-slate-100'
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {activeTab === 'dashboard' && !selectedSubject && (
-          /* Dashboard View */
-          <div>
-            <div className="text-center mb-12">
-              <h2 className={`text-3xl md:text-4xl font-bold text-slate-800 mb-4 ${textAlign} ${language === 'ar' ? 'font-cairo' : 'font-inter'}`}>
-                {language === 'ar' ? 'نظام إدارة الدراسة الذكي' : 'Smart Study Management System'}
-              </h2>
-              <p className={`text-lg text-slate-600 max-w-3xl mx-auto ${textAlign}`}>
-                {language === 'ar' 
-                  ? 'نظام متكامل لإدارة دراستك للدورة التوجيهية 2008، يتضمن تتبع التقدم، الموارد التعليمية، وجدولة الدراسة الذكية' 
-                  : 'A comprehensive system to manage your Tawjihi studies, including progress tracking, educational resources, and smart study scheduling'
-                }
-              </p>
-            </div>
-
-            {/* Quick Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">{language === 'ar' ? 'إجمالي المواد' : 'Total Subjects'}</p>
-                    <p className="text-2xl font-bold text-slate-800">4</p>
-                  </div>
+                <div className="text-center mb-12">
+                  <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                    {t('Smart Study Management System','نظام إدارة الدراسة الذكي')}
+                  </h2>
+                  <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-slate-600'} max-w-3xl mx-auto ${textAlign}`}>
+                    {t('Manage your Tawjihi studies with analytics, AI coaching, and printable monthly grids.',
+                      'إدارة دراستك للتوجيهي مع التحليلات، مدرب ذكاء اصطناعي، وجداول شهرية قابلة للطباعة.')}
+                  </p>
                 </div>
-              </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">{language === 'ar' ? 'المواضيع المكتملة' : 'Topics Completed'}</p>
-                    <p className="text-2xl font-bold text-slate-800">6</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">{language === 'ar' ? 'ساعات الدراسة' : 'Study Hours'}</p>
-                    <p className="text-2xl font-bold text-slate-800">120</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm text-slate-600">{language === 'ar' ? 'الامتحانات المحلولة' : 'Exams Solved'}</p>
-                    <p className="text-2xl font-bold text-slate-800">12</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Subject Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {currentSubjects.map((subject) => {
-                const progress = subjectProgress[subject.id] || { completed: 0, completedCount: 0, totalCount: 1 };
-                
-                return (
-                  <div
-                    key={subject.id}
-                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
-                    onClick={() => goToSubject(subject)}
-                  >
-                    <div className={`h-48 bg-gradient-to-r ${subject.color}`}>
-                      <div className="p-6">
-                        <h3 className={`text-2xl font-bold text-white mb-2 ${textAlign}`}>
-                          {subject.name}
-                        </h3>
-                      </div>
-                    </div>
-                    
-                    <div className="p-6">
-                      <div className="mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm text-slate-600">
-                            {language === 'ar' ? 'التقدم' : 'Progress'}
-                          </span>
-                          <span className="text-sm font-medium text-slate-700">
-                            {progress.completedCount} / {progress.totalCount}
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-200 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-500"
-                            style={{ width: `${progress.completed}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2 text-sm text-slate-600">
-                        <div className="flex justify-between">
-                          <span>{language === 'ar' ? 'المواضيع' : 'Topics'}:</span>
-                          <span className="font-medium">{progress.completed}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{language === 'ar' ? 'الموارد' : 'Resources'}:</span>
-                          <span className="font-medium">
-                            {subjectDetails[subject.id]?.[language]?.resources?.length || 0}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{language === 'ar' ? 'الفيديوهات' : 'Videos'}:</span>
-                          <span className="font-medium">
-                            {subjectDetails[subject.id]?.[language]?.videos?.length || 0}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'courses' && !selectedSubject && (
-          /* Courses Dashboard */
-          <div>
-            <div className="text-center mb-12">
-              <h2 className={`text-3xl font-bold text-slate-800 mb-4 ${textAlign}`}>
-                {language === 'ar' ? 'قسم المواد الدراسية' : 'Course Management Hub'}
-              </h2>
-              <p className={`text-lg text-slate-600 ${textAlign}`}>
-                {language === 'ar' 
-                  ? 'إدارة شاملة لكل المواد الدراسية، الموارد، والتقدم' 
-                  : 'Comprehensive management of all your subjects, resources, and progress'
-                }
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {currentSubjects.map((subject) => {
-                const progress = subjectProgress[subject.id] || { completed: 0, completedCount: 0, totalCount: 1 };
-                const details = subjectDetails[subject.id]?.[language];
-                
-                return (
-                  <div
-                    key={subject.id}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl"
-                  >
-                    <div className={`bg-gradient-to-r ${subject.color} p-6`}>
-                      <h3 className="text-2xl font-bold text-white mb-2">{subject.name}</h3>
-                      <div className="flex items-center space-x-4">
-                        <div className="text-white text-sm">
-                          {language === 'ar' 
-                            ? `${progress.completedCount} من ${progress.totalCount} موضوع` 
-                            : `${progress.completedCount} of ${progress.totalCount} topics`}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-6">
-                      {/* Progress Circle */}
-                      <div className="flex justify-center mb-6">
-                        <div className="relative w-24 h-24">
-                          <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="45"
-                              stroke="currentColor"
-                              strokeWidth="8"
-                              fill="none"
-                              className="text-slate-200"
-                            />
-                            <circle
-                              cx="50"
-                              cy="50"
-                              r="45"
-                              stroke="currentColor"
-                              strokeWidth="8"
-                              fill="none"
-                              strokeDasharray={`${2 * Math.PI * 45}`}
-                              strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress.completed / 100)}`}
-                              className="text-blue-500 transition-all duration-500"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm font-bold text-slate-700">{progress.completed}%</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Key Info */}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                          <span className="text-slate-600 text-sm">{language === 'ar' ? 'عدد الموارد' : 'Resources'}</span>
-                          <span className="font-medium">{details?.resources?.length || 0}</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                          <span className="text-slate-600 text-sm">{language === 'ar' ? 'عدد الفيديوهات' : 'Videos'}</span>
-                          <span className="font-medium">{details?.videos?.length || 0}</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
-                          <span className="text-slate-600 text-sm">{language === 'ar' ? 'معدل الممارسة' : 'Practice'}</span>
-                          <span className="font-medium">{details?.practiceStatus}</span>
-                        </div>
-                      </div>
-                      
-                      <button
-                        onClick={() => goToSubject(subject)}
-                        className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
-                      >
-                        {language === 'ar' ? 'عرض التفاصيل' : 'View Details'}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {selectedSubject && (
-          /* Subject Detail View */
-          <div>
-            <button
-              onClick={goBack}
-              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 mb-8 transition-colors duration-200 font-medium"
-              aria-label={language === 'ar' ? 'العودة' : 'Back'}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span>{language === 'ar' ? 'العودة إلى لوحة التحكم' : 'Back to Dashboard'}</span>
-            </button>
-
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className={`bg-gradient-to-r ${selectedSubject.color} p-8`}>
-                <h1 className="text-4xl font-bold text-white">{selectedSubject.name}</h1>
-                <p className="text-white/90 mt-2">
-                  {language === 'ar' ? 'مركز إدارة المادة الدراسية' : 'Subject Management Center'}
-                </p>
-              </div>
-
-              <div className="p-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Left Column - Key Topics */}
-                  <div className="lg:col-span-1">
-                    <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                      {language === 'ar' ? 'المواضيع الأساسية' : 'Key Topics'}
+                {/* AI Suggestions (local) */}
+                {aiSuggestions.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                      {t('AI Recommendations','توصيات الذكاء الاصطناعي')}
                     </h3>
-                    
                     <div className="space-y-3">
-                      {subjectDetails[selectedSubject.id]?.[language]?.keyTopics.map((topic, index) => (
-                        <div
-                          key={index}
-                          className={`p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
-                            topic.completed
-                              ? topic.needsReview
-                                ? 'border-yellow-300 bg-yellow-50'
-                                : 'border-green-300 bg-green-50'
-                              : 'border-slate-200 bg-slate-50 hover:border-slate-300'
+                      {aiSuggestions.map(suggestion => (
+                        <div key={suggestion.id}
+                          className={`p-4 rounded-lg border-l-4 transition-all duration-200 ${
+                            suggestion.priority === 'high'
+                              ? 'bg-red-50 border-red-500 dark:bg-red-900/30'
+                              : suggestion.priority === 'medium'
+                                ? 'bg-yellow-50 border-yellow-500 dark:bg-yellow-900/30'
+                                : 'bg-blue-50 border-blue-500 dark:bg-blue-900/30'
                           }`}
-                          onClick={() => toggleTopic(selectedSubject.id, index)}
                         >
-                          <div className="flex items-center justify-between">
-                            <span className={`font-medium ${topic.completed ? 'text-slate-700' : 'text-slate-600'}`}>
-                              {topic.name}
-                            </span>
-                            <div className="flex space-x-2">
-                              {topic.completed && (
-                                <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                                  topic.needsReview ? 'bg-yellow-400' : 'bg-green-500'
-                                }`}>
-                                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                              )}
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className={`font-medium ${
+                                suggestion.priority === 'high'
+                                  ? 'text-red-800 dark:text-red-300'
+                                  : suggestion.priority === 'medium'
+                                    ? 'text-yellow-800 dark:text-yellow-300'
+                                    : 'text-blue-800 dark:text-blue-300'
+                              }`}>
+                                {suggestion.message}
+                              </p>
                             </div>
+                            <button className={`ml-4 px-3 py-1 rounded text-sm font-medium transition-colors duration-200 ${
+                              suggestion.priority === 'high'
+                                ? 'bg-red-500 hover:bg-red-600 text-white'
+                                : suggestion.priority === 'medium'
+                                  ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
+                                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+                            }`}>
+                              {suggestion.action}
+                            </button>
                           </div>
-                          {topic.completed && topic.needsReview && (
-                            <p className="text-yellow-700 text-sm mt-1">
-                              {language === 'ar' ? 'يحتاج مراجعة' : 'Needs review'}
-                            </p>
-                          )}
                         </div>
                       ))}
                     </div>
-
-                    {/* Study Schedule */}
-                    <div className="mt-8 p-4 bg-slate-50 rounded-lg">
-                      <h4 className="font-semibold text-slate-800 mb-2">
-                        {language === 'ar' ? 'جدول الدراسة' : 'Study Schedule'}
-                      </h4>
-                      <p className="text-slate-600">
-                        {subjectDetails[selectedSubject.id]?.[language]?.schedule}
-                      </p>
-                    </div>
-
-                    {/* Practice Status */}
-                    <div className="mt-4 p-4 bg-slate-50 rounded-lg">
-                      <h4 className="font-semibold text-slate-800 mb-2">
-                        {language === 'ar' ? 'حالة الممارسة' : 'Practice Status'}
-                      </h4>
-                      <p className="text-slate-600">
-                        {subjectDetails[selectedSubject.id]?.[language]?.practiceStatus}
-                      </p>
-                    </div>
                   </div>
+                )}
 
-                  {/* Right Column - Resources and Videos */}
-                  <div className="lg:col-span-2 space-y-8">
-                    {/* Resources */}
-                    <div>
-                      <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                        {language === 'ar' ? 'الملفات والموارد' : 'Files & Resources'}
-                      </h3>
-                      <div className="space-y-3">
-                        {subjectDetails[selectedSubject.id]?.[language]?.resources.map((resource, index) => (
-                          <a
-                            key={index}
-                            href={resource.url}
-                            className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 border border-slate-200"
-                          >
-                            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                            </div>
-                            <span className="text-slate-800 font-medium">{resource.name}</span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Videos */}
-                    <div>
-                      <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                        {language === 'ar' ? 'الفيديوهات التعليمية' : 'Educational Videos'}
-                      </h3>
-                      <div className="space-y-3">
-                        {subjectDetails[selectedSubject.id]?.[language]?.videos.map((video, index) => (
-                          <a
-                            key={index}
-                            href={video.url}
-                            className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors duration-200 border border-slate-200"
-                          >
-                            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                              </svg>
-                            </div>
-                            <span className="text-slate-800 font-medium">{video.name}</span>
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Notes Section */}
-                    <div>
-                      <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                        {language === 'ar' ? 'الملاحظات والمواضيع الصعبة' : 'Notes & Weak Points'}
-                      </h3>
-                      <div className="space-y-3">
-                        <textarea
-                          placeholder={language === 'ar' 
-                            ? 'اكتب ملاحظاتك هنا... ما الذي وجدته صعبًا؟ ما الذي فهمته جيدًا؟' 
-                            : 'Write your notes here... What did you find difficult? What did you understand well?'
-                          }
-                          className="w-full p-4 border border-slate-300 rounded-lg resize-none h-32 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        ></textarea>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
-                          {language === 'ar' ? 'حفظ الملاحظة' : 'Save Note'}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'planner' && !selectedSubject && (
-          /* Study Planner */
-          <div>
-            <div className="text-center mb-12">
-              <h2 className={`text-3xl font-bold text-slate-800 mb-4 ${textAlign}`}>
-                {language === 'ar' ? 'جدول الدراسة الذكي' : 'Smart Study Planner'}
-              </h2>
-              <p className={`text-lg text-slate-600 ${textAlign}`}>
-                {language === 'ar' 
-                  ? 'جدولة ذكية للدراسة مع تذكيرات وتوصيات' 
-                  : 'Smart scheduling with reminders and recommendations'
-                }
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                  {language === 'ar' ? 'جدول اليوم' : 'Today\'s Schedule'}
-                </h3>
-                <div className="space-y-4">
+                {/* Quick Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                   {[
-                    { time: '6:00-8:00 PM', subject: language === 'ar' ? 'الكيمياء' : 'Chemistry', topic: language === 'ar' ? 'الكيمياء النووية' : 'Nuclear Chemistry' },
-                    { time: '8:30-10:00 PM', subject: language === 'ar' ? 'الأحياء' : 'Biology', topic: language === 'ar' ? 'الجهاز العصبي' : 'Nervous System' }
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center space-x-4 p-4 bg-slate-50 rounded-lg">
-                      <div className="w-16 text-slate-600 font-medium">{item.time}</div>
-                      <div className="flex-1">
-                        <div className="font-semibold text-slate-800">{item.subject}</div>
-                        <div className="text-sm text-slate-600">{item.topic}</div>
+                    { labelEn: 'Study Hours', labelAr: 'ساعات الدراسة', iconBg: 'bg-green-500', value: Math.round(analytics.totalStudyTime / 60) },
+                    { labelEn: 'Avg Session', labelAr: 'متوسط الجلسة', iconBg: 'bg-purple-500', value: `${analytics.avgSessionLength}m` },
+                    { labelEn: 'Exams', labelAr: 'الامتحانات', iconBg: 'bg-yellow-500', value: analytics.totalExams },
+                    { labelEn: 'Average', labelAr: 'المتوسط', iconBg: 'bg-indigo-500', value: `${analytics.avgScore}%` }
+                  ].map((card, idx) => (
+                    <div key={idx} className={`rounded-xl p-6 transition-all duration-200 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-10 h-10 ${card.iconBg} rounded-lg flex items-center justify-center`}>
+                          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24"></svg>
+                        </div>
+                        <div>
+                          <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{t(card.labelEn, card.labelAr)}</p>
+                          <p className="text-2xl font-bold">{card.value}</p>
+                        </div>
                       </div>
-                      <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200">
-                        {language === 'ar' ? 'تم' : 'Done'}
-                      </button>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                  {language === 'ar' ? 'التوصيات الذكية' : 'Smart Recommendations'}
-                </h3>
-                <div className="space-y-4">
-                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-blue-800 font-medium">
-                          {language === 'ar' 
-                            ? 'توصية: راجع موضوع الكيمياء العضوية' 
-                            : 'Recommendation: Review Organic Chemistry topic'
-                          }
-                        </p>
-                        <p className="text-blue-700 text-sm mt-1">
-                          {language === 'ar' 
-                            ? 'لم تقم بمراجعته منذ 5 أيام' 
-                            : 'You haven\'t reviewed it for 5 days'
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                {/* Subject Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {subjectsData[language].map((subject) => {
+                    const progress = subjectProgress[subject.id] || { completed: 0, completedCount: 0, totalCount: 1, needsReview: 0 };
+                    const details = subjectDetails[subject.id]?.[language];
+                    const recentSessions = studySessions.filter(s => s.subject === subject.name).length;
 
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="text-green-800 font-medium">
-                          {language === 'ar' 
-                            ? 'ممتاز! أكملت 70% من مادة الكيمياء' 
-                            : 'Great! You\'ve completed 70% of Chemistry'
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'stats' && !selectedSubject && (
-          /* Statistics and Exam Tracker */
-          <div>
-            <div className="text-center mb-12">
-              <h2 className={`text-3xl font-bold text-slate-800 mb-4 ${textAlign}`}>
-                {language === 'ar' ? 'تتبع الامتحانات والإحصائيات' : 'Exam Tracker & Statistics'}
-              </h2>
-              <p className={`text-lg text-slate-600 ${textAlign}`}>
-                {language === 'ar' 
-                  ? 'تتبع تقدمك في حل الامتحانات السابقة وتحليل الأداء' 
-                  : 'Track your progress in solving past exams and performance analysis'
-                }
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Exam Tracker */}
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                  {language === 'ar' ? 'تتبع الامتحانات' : 'Exam Tracker'}
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-slate-200">
-                        <th className={`py-3 text-sm font-semibold text-slate-700 ${textAlign}`}>
-                          {language === 'ar' ? 'المادة' : 'Subject'}
-                        </th>
-                        <th className={`py-3 text-sm font-semibold text-slate-700 ${textAlign}`}>
-                          {language === 'ar' ? 'عدد الامتحانات' : 'Exams Solved'}
-                        </th>
-                        <th className={`py-3 text-sm font-semibold text-slate-700 ${textAlign}`}>
-                          {language === 'ar' ? 'التقييم' : 'Rating'}
-                        </th>
-                        <th className={`py-3 text-sm font-semibold text-slate-700 ${textAlign}`}>
-                          {language === 'ar' ? 'التاريخ' : 'Date'}
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {examRecords.map((record, index) => (
-                        <tr key={index} className="border-b border-slate-100 hover:bg-slate-50">
-                          <td className={`py-4 text-slate-800 ${textAlign}`}>{record.subject}</td>
-                          <td className={`py-4 text-slate-600 ${textAlign}`}>{record.count}</td>
-                          <td className={`py-4 ${textAlign}`}>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              record.rating === 'Excellent' || record.rating === 'ممتاز'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {record.rating}
-                            </span>
-                          </td>
-                          <td className={`py-4 text-slate-600 ${textAlign}`}>{record.date}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Progress Charts */}
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className={`text-xl font-bold text-slate-800 mb-6 ${textAlign}`}>
-                  {language === 'ar' ? 'مخطط التقدم' : 'Progress Chart'}
-                </h3>
-                <div className="space-y-6">
-                  {currentSubjects.map((subject) => {
-                    const progress = subjectProgress[subject.id] || { completed: 0 };
                     return (
-                      <div key={subject.id}>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium text-slate-800">{subject.name}</span>
-                          <span className="text-sm text-slate-600">{progress.completed}%</span>
+                      <div
+                        key={subject.id}
+                        className={`rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl cursor-pointer transform hover:-translate-y-1 ${
+                          darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'
+                        }`}
+                        onClick={() => goToSubject(subject)}
+                      >
+                        <div className={`h-40 bg-gradient-to-r ${subject.color}`}>
+                          <div className="p-5">
+                            <div className="flex justify-between items-start">
+                              <h3 className="text-2xl font-bold text-white">{subject.icon}</h3>
+                              <span className="text-white/90 text-sm">{recentSessions} {t('sessions','جلسات')}</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-white mt-2">{subject.name}</h3>
+                          </div>
                         </div>
-                        <div className="w-full bg-slate-200 rounded-full h-3">
-                          <div
-                            className={`h-3 rounded-full transition-all duration-500 ${subject.color}`}
-                            style={{ width: `${progress.completed}%` }}
-                          ></div>
+
+                        <div className="p-6">
+                          <div className="mb-4">
+                            <div className="flex justify-between items-center mb-2">
+                              <span className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                                {t('Progress','التقدم')}
+                              </span>
+                              <span className={`text-sm font-medium ${darkMode ? 'text-slate-300' : 'text-slate-700'}`}>
+                                {progress.completedCount} / {progress.totalCount}
+                              </span>
+                            </div>
+                            <div className={`w-full ${darkMode ? 'bg-slate-700' : 'bg-slate-200'} rounded-full h-2`}>
+                              <div className={`h-2 rounded-full transition-all duration-500 bg-gradient-to-r ${subject.color}`} style={{ width: `${progress.completed}%` }}></div>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} p-3 rounded-lg`}>
+                              <div className={`${darkMode ? 'text-slate-300' : 'text-slate-700'} font-medium`}>{t('Resources','الموارد')}</div>
+                              <div className="text-2xl font-bold">{details?.resources?.length || 0}</div>
+                            </div>
+                            <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} p-3 rounded-lg`}>
+                              <div className={`${darkMode ? 'text-slate-300' : 'text-slate-700'} font-medium`}>{t('Videos','الفيديوهات')}</div>
+                              <div className="text-2xl font-bold">{details?.videos?.length || 0}</div>
+                            </div>
+                            <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} p-3 rounded-lg`}>
+                              <div className={`${darkMode ? 'text-slate-300' : 'text-slate-700'} font-medium`}>{t('Reviews','المراجعات')}</div>
+                              <div className="text-2xl font-bold">{progress.needsReview}</div>
+                            </div>
+                            <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} p-3 rounded-lg`}>
+                              <div className={`${darkMode ? 'text-slate-300' : 'text-slate-700'} font-medium`}>{t('Target','الهدف')}</div>
+                              <div className="text-sm">{details?.weeklyGoal}</div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     );
                   })}
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-      </main>
+            )}
 
-      {/* Footer */}
-      <footer className="bg-slate-800 text-white mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">D</span>
+            {/* === COURSES === */}
+            {activeTab === 'courses' && !selectedSubject && (
+              <div>
+                <div className="text-center mb-12">
+                  <h2 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                    {t('Course Management Hub','قسم المواد الدراسية')}
+                  </h2>
+                  <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-slate-600'} ${textAlign}`}>
+                    {t('Manage all your subjects, resources, and progress','إدارة شاملة لكل المواد الدراسية، الموارد، والتقدم')}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {subjectsData[language].map((subject) => {
+                    const progress = subjectProgress[subject.id] || { completed: 0, completedCount: 0, totalCount: 1 };
+                    const details = subjectDetails[subject.id]?.[language];
+
+                    return (
+                      <div key={subject.id} className={`rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                        <div className={`bg-gradient-to-r ${subject.color} p-6`}>
+                          <div className="flex justify-between items-start">
+                            <h3 className="text-2xl font-bold text-white">{subject.icon}</h3>
+                            <div className="text-white/90 text-sm">{progress.completed}%</div>
+                          </div>
+                          <h3 className="text-2xl font-bold text-white mt-2">{subject.name}</h3>
+                        </div>
+
+                        <div className="p-6">
+                          {/* Progress Circle */}
+                          <div className="flex justify-center mb-6">
+                            <div className="relative w-28 h-28">
+                              <svg className="w-28 h-28 transform -rotate-90" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="8" fill="none" className={darkMode ? "text-slate-700" : "text-slate-200"} />
+                                <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="8" fill="none"
+                                  strokeDasharray={`${2 * Math.PI * 45}`}
+                                  strokeDashoffset={`${2 * Math.PI * 45 * (1 - progress.completed / 100)}`}
+                                  className="text-blue-500 transition-all duration-500" strokeLinecap="round" />
+                              </svg>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-center">
+                                  <div className="text-lg font-bold text-slate-700 dark:text-slate-300">{progress.completed}%</div>
+                                  <div className="text-xs text-slate-500 dark:text-slate-400">{progress.completedCount}/{progress.totalCount}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Key Info */}
+                          <div className="space-y-3">
+                            <InfoLine darkMode={darkMode} label={t('Resources','عدد الموارد')} value={details?.resources?.length || 0}/>
+                            <InfoLine darkMode={darkMode} label={t('Videos','عدد الفيديوهات')} value={details?.videos?.length || 0}/>
+                            <InfoLine darkMode={darkMode} label={t('Practice','معدل الممارسة')} value={details?.practiceStatus}/>
+                            <InfoLine darkMode={darkMode} label={t('Target Date','الموعد المستهدف')} value={details?.targetDate}/>
+                          </div>
+
+                          <button onClick={() => goToSubject(subject)} className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+                            {t('Manage Subject','إدارة المادة')}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-              <h3 className="text-xl font-bold">Diraasti – Tawjihi Generation 2008</h3>
+            )}
+
+            {/* === SUBJECT DETAIL === */}
+            {selectedSubject && (
+              <div>
+                <button onClick={goBack} className={`flex items-center space-x-2 mb-8 transition-colors duration-200 font-medium ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'}`} aria-label={t('Back','العودة')}>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                  <span>{t('Back to Dashboard','العودة إلى لوحة التحكم')}</span>
+                </button>
+
+                <div className={`rounded-2xl overflow-hidden transition-all duration-300 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-xl'}`}>
+                  <div className={`bg-gradient-to-r ${selectedSubject.color} p-8`}>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h1 className="text-4xl font-bold text-white">{selectedSubject.icon} {selectedSubject.name}</h1>
+                        <p className="text-white/90 mt-2">{t('Subject Management Center','مركز إدارة المادة الدراسية')}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-white">{subjectProgress[selectedSubject.id]?.completed || 0}%</div>
+                        <div className="text-white/90 text-sm">{subjectProgress[selectedSubject.id]?.completedCount || 0} / {subjectProgress[selectedSubject.id]?.totalCount || 1}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      {/* Topics */}
+                      <div className="lg:col-span-1">
+                        <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>{t('Key Topics','المواضيع الأساسية')}</h3>
+                        <div className="space-y-3">
+                          {subjectDetails[selectedSubject.id]?.[language]?.keyTopics?.map((topic) => (
+                            <div key={topic.id}
+                              className={`p-4 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
+                                topic.completed ? (topic.needsReview ? 'border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20' : 'border-green-300 bg-green-50 dark:bg-green-900/20')
+                                : 'border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-700 hover:border-slate-300'
+                              }`}
+                              onClick={() => toggleTopic(selectedSubject.id, topic.id)}
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <span className={`font-medium ${topic.completed ? (darkMode ? 'text-slate-200' : 'text-slate-700') : (darkMode ? 'text-slate-300' : 'text-slate-600')}`}>{topic.name}</span>
+                                <div className="flex space-x-2">
+                                  {topic.completed && (
+                                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${topic.needsReview ? 'bg-yellow-400' : 'bg-green-500'}`}>
+                                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="grid grid-cols-3 gap-2 text-xs">
+                                <div className={`px-2 py-1 rounded ${topic.weight >= 25 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-600 dark:text-slate-300'}`}>{t('Weight: ','وزن: ')}{topic.weight}%</div>
+                                <div className={`px-2 py-1 rounded ${topic.difficulty >= 8 ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : topic.difficulty >= 6 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'}`}>{t('Diff: ','صعوبة: ')}{topic.difficulty}</div>
+                                {topic.lastReviewed && (<div className="px-2 py-1 rounded bg-slate-100 text-slate-600 dark:bg-slate-600 dark:text-slate-300">{t('Reviewed: ','مراجعة: ')}{topic.lastReviewed}</div>)}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Study Schedule & Practice */}
+                        <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} mt-8 p-4 rounded-lg`}>
+                          <h4 className="font-semibold mb-2">{t('Study Schedule','جدول الدراسة')}</h4>
+                          <p className={darkMode ? 'text-slate-300' : 'text-slate-600'}>{subjectDetails[selectedSubject.id]?.[language]?.schedule}</p>
+                        </div>
+                        <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-50'} mt-4 p-4 rounded-lg`}>
+                          <h4 className="font-semibold mb-2">{t('Practice Status','حالة الممارسة')}</h4>
+                          <p className={darkMode ? 'text-slate-300' : 'text-slate-600'}>{subjectDetails[selectedSubject.id]?.[language]?.practiceStatus}</p>
+                        </div>
+                      </div>
+
+                      {/* Right Column - Resources/Videos/Notes */}
+                      <div className="lg:col-span-2 space-y-8">
+                        {/* Resources */}
+                        <SectionResources darkMode={darkMode} language={language} details={subjectDetails[selectedSubject.id]?.[language]} t={t} />
+                        {/* Videos */}
+                        <SectionVideos darkMode={darkMode} language={language} details={subjectDetails[selectedSubject.id]?.[language]} t={t} />
+                        {/* Notes */}
+                        <SectionNotes darkMode={darkMode} language={language} t={t} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* === PLANNER (includes Monthly Grid) === */}
+            {activeTab === 'planner' && !selectedSubject && (
+              <div>
+                <div className="text-center mb-12">
+                  <h2 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                    {t('Smart Study Planner','جدول الدراسة الذكي')}
+                  </h2>
+                  <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-slate-600'} ${textAlign}`}>
+                    {t('Daily schedule and a printable monthly hour-by-day grid.','جدول يومي وجدول شهري قابل للطباعة (الساعات بالطول).')}
+                  </p>
+                </div>
+
+                {/* Daily list (left) + Monthly Grid (right) on large screens */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Today list (kept simple) */}
+                  <div className={`rounded-xl p-6 transition-all duration-300 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                        {t("Today's Schedule",'جدول اليوم')}
+                      </h3>
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-lg transition-colors duration-200 text-sm">
+                        {t('Add Session','إضافة جلسة')}
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      {studySessions.slice(0, 3).map((session) => (
+                        <div key={session.id} className={`flex items-center space-x-4 p-4 rounded-lg transition-all duration-200 ${darkMode ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-50 hover:bg-slate-100'}`}>
+                          <div className="w-16 text-slate-600 dark:text-slate-300 font-medium">{session.date}</div>
+                          <div className="flex-1">
+                            <div className={`${darkMode ? 'text-white' : 'text-slate-800'} font-semibold`}>{session.subject}</div>
+                            <div className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-sm`}>{session.topic} • {session.duration} min</div>
+                          </div>
+                          <button className={`${session.completed ? 'bg-green-500 text-white' : 'bg-slate-300 dark:bg-slate-600 text-slate-700 dark:text-slate-300'} w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200`}>
+                            {session.completed ? (
+                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                            ) : (
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            )}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Monthly Hour Grid */}
+                  <div className={`rounded-xl p-6 transition-all duration-300 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-4 no-print">
+                      <div>
+                        <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Monthly Hour Grid','الجدول الشهري (ساعة × يوم)')}</h3>
+                        <p className={`${darkMode ? 'text-slate-300' : 'text-slate-600'} text-sm`}>
+                          {t('Each column = day, each row = hour (00-23). Cells are editable.','كل عمود = يوم، كل صف = ساعة (00-23). الخلايا قابلة للتحرير.')}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <select className={`border rounded px-2 py-1 ${darkMode ? 'bg-slate-700 border-slate-600' : ''}`}
+                                value={gridYear} onChange={(e)=>setGridYear(parseInt(e.target.value,10))}>
+                          {[2025,2026].map(y => <option key={y} value={y}>{y}</option>)}
+                        </select>
+                        <select className={`border rounded px-2 py-1 ${darkMode ? 'bg-slate-700 border-slate-600' : ''}`}
+                                value={gridMonth} onChange={(e)=>setGridMonth(parseInt(e.target.value,10))}>
+                          {Array.from({length:12}, (_,i)=>i+1).map(m => (
+                            <option key={m} value={m}>{t(
+                              ["January","February","March","April","May","June","July","August","September","October","November","December"][m-1],
+                              ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"][m-1]
+                            )}</option>
+                          ))}
+                        </select>
+                        <button onClick={saveGrid} className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">{t('Save','حفظ')}</button>
+                        <button onClick={clearGrid} className={`${darkMode?'bg-slate-700 hover:bg-slate-600':'bg-slate-200 hover:bg-slate-300'} px-3 py-1 rounded`}>{t('Clear','مسح')}</button>
+                        <button onClick={printMonth} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">{t('Print (A3)','طباعة (A3)')}</button>
+                      </div>
+                    </div>
+
+                    {/* Header (Month + Quote) */}
+                    <div className="mb-3">
+                      <div className={`text-center font-bold text-lg print-bg ${darkMode ? 'text-white' : 'text-slate-800'}`}>
+                        {monthName(gridYear, gridMonth, language)}
+                      </div>
+                      <div className={`text-center text-sm italic ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                        {language==='ar'
+                          ? (MONTH_QUOTES_AR[monthKey(gridYear, gridMonth)] || 'ابدأ الآن. ساعة اليوم أهم من ألف غدٍ.')
+                          : '“Start now. The hour you study today is worth more than a thousand tomorrows.”'}
+                      </div>
+                    </div>
+
+                    {/* Table */}
+                    <div className="overflow-auto">
+                      <table className={`month-table ${darkMode ? 'print-bg' : ''}`}>
+                        <thead>
+                          <tr>
+                            <th style={{position:'sticky', left:0, zIndex:1}} className={`${darkMode ? 'bg-slate-700' : ''}`}>{t('Hour','الساعة')}</th>
+                            {Array.from({length: daysInMonth(gridYear, gridMonth-1)}, (_,di)=>di+1).map(day => {
+                              const d = new Date(gridYear, gridMonth-1, day);
+                              const w = weekdayName(d.getDay(), language);
+                              const isFri = d.getDay() === 5; // Friday
+                              return (
+                                <th key={day} className={`${isFri ? 'bg-blue-50' : ''} ${darkMode && isFri ? 'bg-blue-900/20' : ''}`}>
+                                  <div className="text-xs font-semibold">{day}</div>
+                                  <div className="text-[10px]">{w}</div>
+                                </th>
+                              );
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Array.from({length:24}, (_,hr)=>hr).map(hour => (
+                            <tr key={hour}>
+                              <th style={{position:'sticky', left:0, zIndex:1}} className={`${darkMode ? 'bg-slate-700 text-white' : ''}`}>{pad2(hour)}</th>
+                              {Array.from({length: daysInMonth(gridYear, gridMonth-1)}, (_,di)=>di+1).map(day => {
+                                const key = `${day}-${hour}`;
+                                const val = gridData[key] || '';
+                                const d = new Date(gridYear, gridMonth-1, day);
+                                const isFri = d.getDay() === 5;
+                                return (
+                                  <td key={key} className={`${isFri ? (darkMode ? 'bg-blue-900/10' : 'bg-blue-50') : ''}`}>
+                                    <div
+                                      className="cell-edit"
+                                      contentEditable
+                                      suppressContentEditableWarning
+                                      onInput={(e)=>handleCellChange(day, hour, e.currentTarget.textContent)}
+                                      onBlur={(e)=>handleCellChange(day, hour, e.currentTarget.textContent)}
+                                    >{val}</div>
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* === STATS === */}
+            {activeTab === 'stats' && !selectedSubject && (
+              <div>
+                <div className="text-center mb-12">
+                  <h2 className={`text-3ص font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                    {t('Performance Analytics & Statistics','تحليلات الأداء والإحصائيات')}
+                  </h2>
+                  <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-slate-600'} ${textAlign}`}>
+                    {t('Overview with weekly trend and subject progress.','نظرة عامة مع اتجاه أسبوعي وتقدم المواد.')}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                  {/* Weekly Trend bars */}
+                  <div className={`rounded-xl p-6 transition-all duration-300 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                    <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Weekly Study Trend','اتجاه الدراسة الأسبوعي')}</h3>
+                    <div className="h-64 flex items-end space-x-4">
+                      {analytics.weeklyTrend.map((week, i) => (
+                        <div key={i} className="flex-1 flex flex-col items-center">
+                          <div className="w-full bg-gradient-to-t from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-500 rounded-t-lg transition-all duration-500" style={{ height: `${week.hours * 10}px` }}></div>
+                          <div className={`${darkMode ? 'text-slate-400' : 'text-slate-600'} text-xs mt-2`}>{week.week}</div>
+                          <div className={`${darkMode ? 'text-white' : 'text-slate-800'} text-xs font-medium`}>{week.hours}h</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Subject Progress list */}
+                  <div className={`rounded-xl p-6 transition-all duration-300 ${darkMode ? 'bg-slate-800' : 'bg-white shadow-lg'}`}>
+                    <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Subject Progress','تقدم المواد')}</h3>
+                    <div className="space-y-6">
+                      {subjectsData[language].map((subject) => {
+                        const progress = subjectProgress[subject.id] || { completed: 0 };
+                        return (
+                          <div key={subject.id}>
+                            <div className="flex justify-between items-center mb-2">
+                              <div className="flex items-center space-x-2">
+                                <span className="text-lg">{subject.icon}</span>
+                                <span className={`${darkMode ? 'text-white' : 'text-slate-800'} font-medium`}>{subject.name}</span>
+                              </div>
+                              <span className={`${darkMode ? 'text-slate-300' : 'text-slate-600'} text-sm`}>{progress.completed}%</span>
+                            </div>
+                            <div className={`${darkMode ? 'bg-slate-700' : 'bg-slate-200'} w-full rounded-full h-3`}>
+                              <div className={`h-3 rounded-full transition-all duration-500 bg-gradient-to-r ${subject.color}`} style={{ width: `${progress.completed}%` }}></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* === AI: Gemini Coach === */}
+            {activeTab === 'ai' && !selectedSubject && (
+              <div>
+                <div className="text-center mb-12">
+                  <h2 className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-slate-800'} ${textAlign}`}>
+                    {t('AI-Powered Insights (Gemini)','رؤى الذكاء الاصطناعي (Gemini)')}
+                  </h2>
+                  <p className={`text-lg ${darkMode ? 'text-slate-300' : 'text-slate-600'} ${textAlign}`}>
+                    {t('Paste your Gemini API key to enable the coach. Ask for plans, reviews, or topic explanations.','ألصق مفتاح Gemini لتفعيل المدرب. اطلب خططًا، مراجعات، أو شروحات للمواضيع.')}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Key input & Options */}
+                  <div className={`rounded-xl p-6 ${darkMode?'bg-slate-800':'bg-white shadow-lg'}`}>
+                    <h3 className={`font-bold mb-3 ${darkMode ? 'text-white':'text-slate-800'}`}>{t('API Setup','إعداد المفتاح')}</h3>
+                    <label className="block text-sm mb-1">{t('Gemini API Key','مفتاح Gemini')}</label>
+                    <input type="password" value={apiKey} onChange={(e)=>setApiKey(e.target.value)}
+                      placeholder={t('Paste your key here','ألصق المفتاح هنا')}
+                      className={`w-full mb-3 border rounded px-3 py-2 ${darkMode?'bg-slate-700 border-slate-600':'border-slate-300'}`} />
+                    <div className="flex items-center gap-2">
+                      <button onClick={saveKey} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">{t('Save','حفظ')}</button>
+                      <select value={aiModel} onChange={(e)=>setAiModel(e.target.value)}
+                        className={`border rounded px-2 py-2 ${darkMode ? 'bg-slate-700 border-slate-600':'border-slate-300'}`}>
+                        <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
+                        <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
+                      </select>
+                    </div>
+                    <p className="text-xs mt-3 text-slate-500">{t('Key is saved in your browser (localStorage). Do not share it.','يُحفظ المفتاح محليًا في متصفحك (LocalStorage). لا تشاركه.')}</p>
+                  </div>
+
+                  {/* Prompt */}
+                  <div className={`rounded-xl p-6 lg:col-span-2 ${darkMode?'bg-slate-800':'bg-white shadow-lg'}`}>
+                    <h3 className={`font-bold mb-3 ${darkMode ? 'text-white':'text-slate-800'}`}>{t('Ask the Coach','اسأل المدرب')}</h3>
+                    <textarea value={aiInput} onChange={(e)=>setAiInput(e.target.value)}
+                      placeholder={t('e.g., “Make me a 7-day plan focusing on Organic Chemistry and Genetics.”','مثلاً: "اصنع خطة 7 أيام تركز على الكيمياء العضوية والوراثة."')}
+                      className={`w-full h-28 mb-3 rounded px-3 py-2 resize-y ${darkMode?'bg-slate-700 border border-slate-600':'border border-slate-300'}`}></textarea>
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="inline-flex items-center gap-2">
+                        <input type="checkbox" checked={aiUseContext} onChange={(e)=>setAiUseContext(e.target.checked)} />
+                        <span className={`${darkMode?'text-slate-300':'text-slate-700'}`}>{t('Use my data as context','استخدم بياناتي كالسياق')}</span>
+                      </label>
+                      <button onClick={handleAskAI} disabled={aiLoading}
+                        className={`px-4 py-2 rounded text-white ${aiLoading ? 'bg-slate-400' : 'bg-green-600 hover:bg-green-700'}`}>
+                        {aiLoading ? t('Thinking...','جارٍ التحليل...') : t('Analyze with Gemini','حلّل عبر Gemini')}
+                      </button>
+                    </div>
+                    <div className={`rounded p-4 min-h-[120px] ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                      <pre className={`${darkMode ? 'text-slate-100':'text-slate-800'} whitespace-pre-wrap`}>{aiOutput}</pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* Footer */}
+          <footer className={`${darkMode ? 'bg-slate-800 text-white' : 'bg-slate-800 text-white'} mt-20`}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">D</span>
+                  </div>
+                  <h3 className="text-xl font-bold">Diraasti – Tawjihi Generation 2008</h3>
+                </div>
+                <p className="text-slate-300 mb-4">
+                  {t('Comprehensive study management with AI & monthly printable grids.','نظام متكامل لإدارة الدراسة مع الذكاء الاصطناعي وجداول شهرية للطباعة.')}
+                </p>
+                <p className="text-slate-400 text-sm">
+                  © 2024 Diraasti. {t('All rights reserved.','جميع الحقوق محفوظة.')}
+                </p>
+              </div>
             </div>
-            <p className="text-slate-300 mb-4">
-              {language === 'ar'
-                ? 'نظام متكامل لإدارة الدراسة للدورة التوجيهية 2008'
-                : 'Comprehensive study management system for Tawjihi Generation 2008'}
-            </p>
-            <p className="text-slate-400 text-sm">
-              {language === 'ar'
-                ? '© 2024 دراستي. جميع الحقوق محفوظة.'
-                : '© 2024 Diraasti. All rights reserved.'}
-            </p>
+          </footer>
+        </div>
+      );
+    }
+
+    // -------- Small subcomponents --------
+    function InfoLine({ darkMode, label, value }) {
+      return (
+        <div className={`flex justify-between items-center p-3 rounded-lg ${darkMode ? 'bg-slate-700' : 'bg-slate-50'}`}>
+          <span className={`text-sm ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>{label}</span>
+          <span className="font-medium">{value}</span>
+        </div>
+      );
+    }
+
+    function SectionResources({ darkMode, language, details, t }) {
+      return (
+        <div>
+          <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Files & Resources','الملفات والموارد')}</h3>
+          <div className="space-y-3">
+            {(details?.resources || []).map((resource) => (
+              <div key={resource.id} className={`flex items-center justify-between p-4 rounded-lg border transition-colors duration-200 ${darkMode ? 'border-slate-700 bg-slate-700 hover:bg-slate-600' : 'border-slate-200 bg-slate-50 hover:bg-slate-100'}`}>
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  </div>
+                  <div>
+                    <span className={`${darkMode ? 'text-white' : 'text-slate-800'} font-medium`}>{resource.name}</span>
+                    <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{resource.type} • {resource.size} • {resource.downloads} {language === 'ar' ? 'تنزيل' : 'downloads'}</div>
+                  </div>
+                </div>
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
+                  {t('Download','تنزيل')}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
-      </footer>
+      );
+    }
 
-      {/* Google Fonts */}
-      <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
-    </div>
-  );
-};
+    function SectionVideos({ darkMode, language, details, t }) {
+      return (
+        <div>
+          <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Educational Videos','الفيديوهات التعليمية')}</h3>
+          <div className="space-y-3">
+            {(details?.videos || []).map((video) => (
+              <div key={video.id} className={`flex items-center justify-between p-4 rounded-lg border transition-colors duration-200 ${darkMode ? 'border-slate-700 bg-slate-700 hover:bg-slate-600' : 'border-slate-200 bg-slate-50 hover:bg-slate-100'}`}>
+                <div className="flex items-center space-x-4">
+                  <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                  </div>
+                  <div>
+                    <span className={`${darkMode ? 'text-white' : 'text-slate-800'} font-medium`}>{video.name}</span>
+                    <div className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>{(video.views||0).toLocaleString()} {language === 'ar' ? 'مشاهدة' : 'views'} • {video.rating}/5</div>
+                  </div>
+                </div>
+                <button className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm">
+                  {t('Watch','عرض')}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
 
-export default App;
+    function SectionNotes({ darkMode, language, t }) {
+      return (
+        <div>
+          <h3 className={`text-xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-slate-800'}`}>{t('Notes & Weak Points','الملاحظات والمواضيع الصعبة')}</h3>
+          <div className="space-y-3">
+            <textarea
+              placeholder={t('Write your notes here...','اكتب ملاحظاتك هنا...')}
+              className={`w-full p-4 rounded-lg resize-none h-32 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${darkMode ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' : 'border-slate-300 placeholder-slate-400'}`}
+            ></textarea>
+            <div className="flex gap-3">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                {t('Save Note','حفظ الملاحظة')}
+              </button>
+              <button className={`${darkMode ? 'bg-slate-700 hover:bg-slate-600 text-slate-300' : 'bg-slate-200 hover:bg-slate-300 text-slate-700'} px-4 py-2 rounded-lg transition-colors duration-200`}>
+                {t('Clear','مسح')}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Mount app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
