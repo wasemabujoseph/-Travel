@@ -1,38 +1,21 @@
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-
-const resources = {
+// Simple translations helper (not used in base code, optional)
+const translations = {
   ar: {
-    translation: {
-      home: 'الرئيسية',
-      resources: 'الموارد',
-      settings: 'الإعدادات',
-      toggle_lang: 'Switch to English',
-      add_subject: 'أضف مادة',
-      subject_name: 'اسم المادة',
-      add_topic: 'أضف موضوع',
-      mark_done: 'وضع كمُكتمل'
-    }
+    subjects: "المواد الدراسية",
+    back: "رجوع",
+    videoPlaylists: "قوائم التشغيل",
+    pastExamPapers: "نماذج الامتحانات",
+    studyTips: "نصائح للدراسة"
   },
   en: {
-    translation: {
-      home: 'Home',
-      resources: 'Resources',
-      settings: 'Settings',
-      toggle_lang: 'التبديل إلى العربية',
-      add_subject: 'Add Subject',
-      subject_name: 'Subject name',
-      add_topic: 'Add topic',
-      mark_done: 'Mark as done'
-    }
+    subjects: "Subjects",
+    back: "Back",
+    videoPlaylists: "Video Playlists",
+    pastExamPapers: "Past Exam Papers",
+    studyTips: "Study Tips"
   }
+};
+
+export function t(lang, key) {
+  return translations[lang][key] || key;
 }
-
-i18n.use(initReactI18next).init({
-  resources,
-  lng: 'ar',
-  fallbackLng: 'ar',
-  interpolation: { escapeValue: false },
-})
-
-export default i18n
