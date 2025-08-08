@@ -1,0 +1,70 @@
+{
+  "كيمياء": {
+    "summary": "ملخصات + فيديوهات توازن المعادلات والكيمياء العضوية",
+    "files": [
+      {
+        "title": "ملخص الكيمياء – صفحة واحدة",
+        "link": "https://moe.gov.jo/chem-summary.pdf"
+      },
+      {
+        "title": "نماذج امتحانات توجيهي – كيمياء",
+        "link": "https://moe.gov.jo/chem-pastpapers.pdf"
+      }
+    ],
+    "videos": [
+      {
+        "title": "شرح توازن المعادلات - قناة علوم نت",
+        "link": "https://www.youtube.com/playlist?list=PLchemistry_example"
+      },
+      {
+        "title": "الكيمياء العضوية – سلسلة",
+        "link": "https://www.youtube.com/playlist?list=PLorganic_example"
+      }
+    ]
+  },
+  "أحياء": {
+    "summary": "ملخصات الجهاز العصبي والوراثة",
+    "files": [
+      {
+        "title": "ملخص الجهاز العصبي",
+        "link": "https://moe.gov.jo/bio-nervous-summary.pdf"
+      }
+    ],
+    "videos": [
+      {
+        "title": "الجهاز العصبي المركزي – شرح مفصّل",
+        "link": "https://www.youtube.com/playlist?list=PLbio_example"
+      }
+    ]
+  },
+  "إنجليزي متقدم": {
+    "summary": "قواعد متقدمة وتمارين على Conditional & Tenses",
+    "files": [
+      {
+        "title": "Conditional Sentences – ورقة غش",
+        "link": "https://example.com/eng-conditionals.pdf"
+      }
+    ],
+    "videos": [
+      {
+        "title": "Conditional Sentences – Practice Playlist",
+        "link": "https://www.youtube.com/playlist?list=PLeng_example"
+      }
+    ]
+  },
+  "وزارة التربية الأردنية": {
+    "summary": "موقع وزارة التربية والتعليم — نماذج ورسائل رسمية وموارد",
+    "files": [
+      {
+        "title": "بوابة الامتحانات – نماذج قديمة",
+        "link": "https://moe.gov.jo/exams"
+      }
+    ],
+    "videos": [
+      {
+        "title": "قناة الوزارة الرسمية (YouTube)",
+        "link": "https://www.youtube.com/channel/moe_official"
+      }
+    ]
+  }
+}
