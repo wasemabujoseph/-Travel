@@ -10,14 +10,14 @@
  * requests and provide offline experiences【87356029003546†L109-L123】.
  */
 
-const CACHE_NAME = 'diraasti-cache-v1';
+const CACHE_NAME = 'diraasti-cache-v2';
 
 // List of URLs to cache on install.  Include the root, index and key assets.
 const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/src/main.js',
-  '/src/App.jsx',
+  '/src/App.js',
   '/manifest.webmanifest',
   '/assets/logo.svg',
   '/assets/icon-192.png',
