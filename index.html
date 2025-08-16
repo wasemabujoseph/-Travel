@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>دِراسْتي — تعلّم بذكاء (PDF + Gemini + اختبارات)</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Icons (Tabler) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- PDF.js (UMD, robust for Acode/Android WebView) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.js";
+  </script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/styles/main.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <i class="ti ti-book-2 logo"></i>
+      <div class="brand-text">
+        <h1>دِراسْتي</h1>
+        <small>مكتبة • مذاكرة ذكية • اختبارات • مهام • مخطّط</small>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="themeToggle" class="btn ghost" title="تبديل السمة"><i class="ti ti-sun"></i></button>
+      <button id="helpBtn" class="btn ghost"><i class="ti ti-help-circle"></i><span class="hide-sm">مساعدة</span></button>
+      <button id="exportBtn" class="btn ghost"><i class="ti ti-download"></i><span class="hide-sm">تصدير</span></button>
+      <label class="file-btn">
+        <input id="importInput" type="file" accept="application/json" />
+        <span class="btn ghost"><i class="ti ti-upload"></i><span class="hide-sm">استيراد</span></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- Nav -->
+  <nav class="tabs" role="tablist" aria-label="التنقل">
+    <button class="tab active" data-route="library"><i class="ti ti-library"></i><span>المكتبة</span></button>
+    <button class="tab" data-route="viewer"><i class="ti ti-file-type-pdf"></i><span>عارض PDF</span></button>
+    <button class="tab" data-route="qa"><i class="ti ti-robot"></i><span>المذاكرة الذكية</span></button>
+    <button class="tab" data-route="quiz"><i class="ti ti-checkbox"></i><span>اختبارات</span></button>
+    <button class="tab" data-route="dashboard"><i class="ti ti-gauge"></i><span>لوحة التحكم</span></button>
+    <button class="tab" data-route="tasks"><i class="ti ti-list-check"></i><span>المهام</span></button>
+    <button class="tab" data-route="planner"><i class="ti ti-calendar"></i><span>المخطِّط</span></button>
+    <button class="tab" data-route="settings"><i class="ti ti-settings"></i><span>الإعدادات</span></button>
+  </nav>
+
+  <!-- Main -->
+  <main id="app" class="container">
+    <!-- Library -->
+    <section data-view="library" class="view active">
+      <div class="section-head">
+        <h2><i class="ti ti-library"></i> مكتبة الكتب</h2>
+        <div class="filters">
+          <input id="libSearch" class="input" type="search" placeholder="ابحث عن كتاب…" />
+          <select id="libGrade" class="select">
+            <option value="">جميع الصفوف</option>
+            <option value="12">الصف 12</option>
+          </select>
+          <select id="libStatus" class="select">
+            <option value="">جميع الحالات</option>
+            <option value="available">متاح</option>
+            <option value="unpublished">غير منشور</option>
+            <option value="external">خارجي</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="libraryGrid" class="grid cards"></div>
+
+      <details class="card mt-16">
+        <summary class="card-title"><i class="ti ti-plus"></i> إضافة كتاب جديد</summary>
+        <form id="addBookForm" class="form-grid" autocomplete="off">
+          <label>المعرف (ID)<input class="input" name="id" required placeholder="unique-id"/></label>
+          <label>المادة<input class="input" name="subject" required placeholder="الكيمياء"/></label>
+          <label>الصف<input class="input" name="grade" required placeholder="12"/></label>
+          <label>الفصل<input class="input" name="term" required placeholder="الفصل الأول"/></label>
+          <label>الجزء/الفصل<input class="input" name="chapter" required placeholder="الجزء الأول"/></label>
+          <label>اللغة
+            <select class="select" name="language">
+              <option>AR</option><option>EN</option>
+            </select>
+          </label>
+          <label>رابط PDF<input class="input" type="url" name="url" placeholder="https://…"/></label>
+          <label>أو ملف محلي<input type="file" accept="application/pdf" name="file"/></label>
+          <label>الحالة
+            <select class="select" name="status">
+              <option value="available">available</option>
+              <option value="unpublished">unpublished</option>
+              <option value="external">external</option>
+            </select>
+          </label>
+          <label>ملاحظات<input class="input" name="notes" placeholder="اختياري"/></label>
+          <div class="form-actions">
+            <button class="btn primary" type="submit"><i class="ti ti-device-floppy"></i> حفظ</button>
+            <button class="btn" type="reset"><i class="ti ti-refresh"></i> إعادة</button>
+          </div>
+        </form>
+      </details>
+    </section>
+
+    <!-- Viewer -->
+    <section data-view="viewer" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-file-type-pdf"></i> عارض PDF</h2>
+      </div>
+
+      <div class="viewer-controls">
+        <label>اختر كتابًا:
+          <select id="pdfSelect" class="select"></select>
+        </label>
+        <label>من:
+          <input id="rangeFrom" class="input small" type="number" min="1" value="1" />
+        </label>
+        <label>إلى:
+          <input id="rangeTo" class="input small" type="number" min="1" value="1" />
+        </label>
+        <button id="viewBtn" class="btn primary"><i class="ti ti-eye"></i> عرض</button>
+        <button id="extractBtn" class="btn"><i class="ti ti-text-recognition"></i> استخراج نص</button>
+        <button id="openSrcBtn" class="btn ghost" title="فتح المصدر"><i class="ti ti-external-link"></i></button>
+      </div>
+
+      <div id="pdfMeta" class="muted"></div>
+
+      <div class="viewer-layout">
+        <aside id="thumbs" class="thumbs"></aside>
+        <div id="pdfViewer" class="pdf-viewer" aria-live="polite"></div>
+      </div>
+
+      <div id="extractedWrap" class="card mt-16 hidden">
+        <div class="card-title">نص المقتطف</div>
+        <textarea id="extractedText" class="textarea" rows="8" readonly></textarea>
+      </div>
+
+      <div id="pdfNotice" class="notice hidden"></div>
+    </section>
+
+    <!-- Q&A -->
+    <section data-view="qa" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-robot"></i> المذاكرة الذكية (Gemini)</h2>
+      </div>
+      <div class="qa-box">
+        <label>السؤال:
+          <textarea id="qaQuestion" class="textarea" rows="3" placeholder="اكتب سؤالك بالعربية…"></textarea>
+        </label>
+        <div class="form-row">
+          <label class="switch">
+            <input id="qaUseRangeOnly" type="checkbox" checked />
+            <span>اعتمد فقط على نص النطاق</span>
+          </label>
+          <button id="qaAskBtn" class="btn primary"><i class="ti ti-send"></i> اسأل</button>
+        </div>
+        <div id="qaStatus" class="muted"></div>
+        <div id="qaAnswer" class="qa-answer"></div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section data-view="quiz" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-checkbox"></i> الاختبارات (MCQ)</h2>
+      </div>
+      <form id="quizForm" class="form-row">
+        <label>عدد الأسئلة:
+          <input id="quizCount" class="input small" type="number" min="5" max="50" value="10"/>
+        </label>
+        <label>الصعوبة:
+          <select id="quizDifficulty" class="select">
+            <option>سهل</option><option selected>متوسط</option><option>صعب</option>
+          </select>
+        </label>
+        <label class="switch">
+          <input id="quizUseRange" type="checkbox" checked />
+          <span>النطاق الحالي</span>
+        </label>
+        <button id="quizGenBtn" class="btn primary" type="button"><i class="ti ti-magic-wand"></i> توليد</button>
+      </form>
+
+      <div id="quizArea" class="quiz-area"></div>
+      <div id="quizActions" class="form-row hidden">
+        <button id="quizSubmitBtn" class="btn success"><i class="ti ti-check"></i> تصحيح</button>
+        <button id="quizResetBtn" class="btn"><i class="ti ti-reload"></i> إعادة</button>
+      </div>
+      <div id="quizResult" class="card mt-16 hidden"></div>
+    </section>
+
+    <!-- Dashboard -->
+    <section data-view="dashboard" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-gauge"></i> لوحة التحكم</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">عدد الكتب</div>
+          <div id="statBooks" class="stat-value">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">متوسط الدرجات</div>
+          <div id="statAvg" class="stat-value">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-title">إجمالي وقت الدراسة</div>
+          <div id="statStudy" class="stat-value">0 د</div>
+        </div>
+      </div>
+
+      <div class="card mt-16">
+        <div class="card-title"><i class="ti ti-chart-line"></i> الأداء عبر الزمن</div>
+        <div class="card-content">
+          <canvas id="resultsChart" height="120"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tasks -->
+    <section data-view="tasks" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-list-check"></i> المهام</h2>
+      </div>
+      <form id="taskForm" class="form-grid">
+        <label>العنوان<input name="title" class="input" required /></label>
+        <label>الوصف<input name="desc" class="input" /></label>
+        <label>الأولوية
+          <select name="priority" class="select">
+            <option>منخفضة</option><option selected>متوسطة</option><option>عالية</option>
+          </select>
+        </label>
+        <label>الموعد النهائي<input name="due" type="datetime-local" class="input"/></label>
+        <div class="form-actions"><button class="btn primary" type="submit"><i class="ti ti-plus"></i> إضافة</button></div>
+      </form>
+
+      <div class="form-row">
+        <input id="taskSearch" class="input" placeholder="بحث…" />
+        <select id="taskFilter" class="select">
+          <option value="">الكل</option><option>عالية</option><option>متوسطة</option><option>منخفضة</option>
+        </select>
+        <select id="taskSort" class="select">
+          <option value="due">حسب الموعد</option>
+          <option value="priority">حسب الأولوية</option>
+          <option value="title">حسب العنوان</option>
+        </select>
+      </div>
+
+      <div id="tasksList" class="list"></div>
+    </section>
+
+    <!-- Planner -->
+    <section data-view="planner" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-calendar"></i> المخطِّط</h2>
+      </div>
+      <div class="planner-controls">
+        <div class="btn-group">
+          <button data-view="daily" class="btn primary outline">يومي</button>
+          <button data-view="weekly" class="btn outline">أسبوعي</button>
+          <button data-view="yearly" class="btn outline">سنوي</button>
+        </div>
+        <div class="btn-group">
+          <button id="tplReview" class="btn"><i class="ti ti-template"></i> مراجعة فصل</button>
+          <button id="tplQuestions" class="btn"><i class="ti ti-template"></i> حل أسئلة</button>
+          <button id="tplMock" class="btn"><i class="ti ti-template"></i> اختبار تجريبي</button>
+        </div>
+      </div>
+      <div id="plannerArea" class="planner-area"></div>
+    </section>
+
+    <!-- Settings -->
+    <section data-view="settings" class="view">
+      <div class="section-head">
+        <h2><i class="ti ti-settings"></i> الإعدادات</h2>
+      </div>
+      <form id="settingsForm" class="form-grid narrow">
+        <label>مفتاح Gemini API
+          <input id="geminiKeyInput" class="input" type="password" placeholder="AIza…" />
+        </label>
+        <label class="switch">
+          <input id="mockModeToggle" type="checkbox" />
+          <span>تشغيل Mock Mode تلقائيًا عند الفشل</span>
+        </label>
+        <label class="switch">
+          <input id="rateLimitToggle" type="checkbox" checked />
+          <span>حدّ المعدّل (5/دقيقة)</span>
+        </label>
+        <div class="form-actions">
+          <button id="saveSettingsBtn" class="btn primary" type="button"><i class="ti ti-device-floppy"></i> حفظ</button>
+          <button id="resetAllBtn" class="btn danger" type="button"><i class="ti ti-trash"></i> مسح جميع البيانات</button>
+        </div>
+      </form>
+      <div id="settingsInfo" class="muted"></div>
+    </section>
+  </main>
+
+  <!-- Help modal -->
+  <dialog id="helpDialog" class="modal">
+    <form method="dialog" class="modal-card">
+      <header class="modal-head">
+        <h3><i class="ti ti-help-circle"></i> مساعدة مختصرة</h3>
+        <button class="btn icon" value="close" aria-label="إغلاق"><i class="ti ti-x"></i></button>
+      </header>
+      <div class="modal-content">
+        <ol class="help-list">
+          <li><b>اختر النطاق</b> من تبويب العارض (من/إلى) ثم <i>عرض</i> و<i>استخراج النص</i>.</li>
+          <li><b>المذاكرة الذكية</b>: اسأل بالعربية مع خيار “النطاق فقط”. إن غابت المعلومة يجيب: “لا أعلم”.</li>
+          <li><b>الاختبارات</b>: حدّد العدد والصعوبة، ثم <i>توليد</i> و<i>تصحيح</i> (الحفظ تلقائي).</li>
+          <li><b>CORS</b>: إن تعذّر التحميل، استخدم <i>فتح المصدر</i> أو أضف PDF محليًا.</li>
+        </ol>
+      </div>
+      <footer class="modal-foot"><button class="btn primary" value="ok">تم</button></footer>
+    </form>
+  </dialog>
+
+  <!-- Toasts -->
+  <div id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- App -->
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>
