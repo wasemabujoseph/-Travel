@@ -3,390 +3,540 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>الخطة النهائية — جورجيا 23–30 سبتمبر 2025 | باتومي في أفضل الطقس</title>
+<title>الخطة الاحترافية — جورجيا 23–30 سبتمبر 2025 | باتومي (أفضل طقس) + تبليسي + أنانوري/كازبيجي + بورجومي</title>
+<meta name="description" content="خطة سفر احترافية إلى جورجيا: يومان في باتومي بأفضل طقس، يومان في تبليسي، جولة أنانوري/كازبيجي بيوم واحد، وبورجومي. نصائح الملابس، مسارات القيادة، خرائط Google مدمجة." />
 <style>
   :root{
-    --bg:#0f172a; --panel:#0b132b; --ink:#f1f5f9; --muted:#a6b1bb;
-    --line:#1f2937; --line2:#263143; --brand:#7dd3fc; --accent:#34d399;
+    --bg:#0e132a; --panel:#0b132b; --ink:#e7eef9; --muted:#a6b1bb;
+    --line:#1e2a3e; --line2:#243046; --brand:#7dd3fc; --accent:#34d399;
     --pill:#1e40af; --maps:#047857; --search:#0369a1; --yt:#cc0000;
+    --welcome-h:72px; --daybar-h:50px;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:"Segoe UI",Tahoma,Arial,system-ui;background:var(--bg);color:var(--ink);line-height:1.8}
-  header{position:sticky;top:0;z-index:999;background:rgba(11,19,43,.92);backdrop-filter:blur(6px);border-bottom:1px solid rgba(125,211,252,.25)}
-  .nav{max-width:1200px;margin:auto;padding:12px 18px}
-  .brand{font-weight:800;color:#fff;font-size:16px}
-  .toc{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
-  .toc a{color:#001827;background:linear-gradient(180deg,#b9e6fe,#7dd3fc);padding:6px 10px;border-radius:999px;text-decoration:none}
-  main{max-width:1200px;margin:auto;padding:22px 18px 48px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin:16px 0}
-  h1{margin:0 0 8px;font-size:22px}
-  h2{margin:0 0 10px;font-size:20px}
-  .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:14px;color:var(--muted)}
-  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
-  thead th{background:#162238;border:1px solid var(--line2);padding:10px;text-align:right}
-  td,th{border:1px solid var(--line2);padding:10px;vertical-align:top}
-  .links{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;font-size:13px}
-  .pill{padding:6px 10px;border-radius:10px;background:var(--pill);color:#fff;text-decoration:none}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Segoe UI","Noto Naskh Arabic UI",Tahoma,Arial,system-ui;
+    background:var(--bg); color:var(--ink); line-height:1.85;
+  }
+
+  /* ===== Fixed Welcome Bar (with top nav button) ===== */
+  .welcome{
+    position:fixed; inset-inline:0; top:0; z-index:1100;
+    background:linear-gradient(180deg,rgba(11,19,43,.98),rgba(11,19,43,.94));
+    border-bottom:1px solid rgba(125,211,252,.25);
+    display:flex; align-items:center; gap:12px; padding:14px 18px;
+  }
+  .welcome .title{font-weight:800; font-size:16px; color:#fff}
+  .welcome .subtitle{color:var(--muted); font-size:13px}
+  .welcome .actions{margin-inline-start:auto; display:flex; gap:8px}
+  .topbtn{
+    appearance:none; border:0; cursor:pointer;
+    background:linear-gradient(180deg,#b9e6fe,#7dd3fc);
+    color:#001827; font-weight:700; font-size:13px;
+    padding:8px 12px; border-radius:999px; text-decoration:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
+    white-space:nowrap;
+  }
+  .topbtn:active{transform:scale(.98)}
+  .topbtn.accent{background:linear-gradient(180deg,#86efac,#34d399);}
+
+  /* ===== Fixed Day Click Bar (tabs) ===== */
+  .daybar{
+    position:fixed; top:var(--welcome-h); inset-inline:0; z-index:1090;
+    height:var(--daybar-h);
+    background:#0b1429; border-bottom:1px solid #1d2a43;
+    display:flex; align-items:center; gap:8px;
+    padding:0 12px; overflow:auto; scrollbar-width:none;
+  }
+  .daybar::-webkit-scrollbar{display:none}
+  .daytab{
+    flex:0 0 auto; white-space:nowrap;
+    background:#0e1a33; border:1px solid #1f2c46; color:#d8e6ff;
+    padding:8px 12px; border-radius:999px; font-size:13px; text-decoration:none;
+  }
+  .daytab.active{border-color:#3d6fb3; box-shadow:0 0 0 2px rgba(61,111,179,.25) inset}
+
+  /* ===== Layout & Cards ===== */
+  .spacer-top{height:calc(var(--welcome-h) + var(--daybar-h) + 12px)}
+  main{max-width:1200px; margin:auto; padding:0 18px 66px}
+  section[id]{scroll-margin-top:calc(var(--welcome-h) + var(--daybar-h) + 14px)}
+  .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+  .card{grid-column:1/-1; background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px}
+  h1{margin:0 0 8px; font-size:24px}
+  h2{margin:0 0 10px; font-size:20px}
+  h3{margin:14px 0 8px; font-size:17px}
+  .muted{color:var(--muted)}
+  .kpi{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+  .kpi span{background:#132036; border:1px solid #23324a; padding:6px 10px; border-radius:10px; font-size:12px}
+  .badges{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+  .badge{font-size:12px; padding:3px 8px; border-radius:999px; border:1px solid var(--line2); color:#c7d2fe}
+  .ok{color:#bbf7d0; border-color:rgba(52,211,153,.4)}
+  .warn{color:#ffefb0; border-color:rgba(245,158,11,.4)}
+
+  .table{width:100%; border-collapse:collapse; margin-top:10px; font-size:14px}
+  .table thead th{background:#162238; border:1px solid var(--line2); padding:10px; text-align:right}
+  .table td,.table th{border:1px solid var(--line2); padding:10px; vertical-align:top}
+  .links{margin-top:6px; display:flex; gap:8px; flex-wrap:wrap; font-size:13px}
+  .pill{padding:6px 10px; border-radius:10px; background:var(--pill); color:#fff; text-decoration:none}
   .maps{background:var(--maps)}
   .search{background:var(--search)}
   .yt{background:var(--yt)}
-  iframe.map{width:100%;height:320px;border:0;border-radius:12px;margin-top:10px}
-  .night{display:inline-block;margin:2px 0;padding:4px 8px;border-radius:8px;border:1px dashed rgba(125,211,252,.45);color:#93c5fd;font-size:12px}
-  .note{font-size:12px;color:var(--muted)}
+  iframe.map{width:100%; height:320px; border:0; border-radius:12px; margin-top:10px}
+
+  .wear{background:#0f1b33; border:1px solid #21304a; border-radius:12px; padding:10px; margin-top:10px}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .three{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media (max-width:1000px){ .two,.three{grid-template-columns:1fr} }
+  .list{margin:6px 0 0 20px}
+  .foot{margin-top:26px; color:var(--muted); font-size:12px; border-top:1px dashed rgba(148,163,184,.35); padding-top:10px}
+
+  /* Keep fixed elements crisp */
+  .welcome, .daybar{will-change:transform}
 </style>
 </head>
 <body>
-<header>
-  <div class="nav">
-    <div class="brand">الخطة النهائية — 2 يوم باتومي (أفضل طقس) · 2 يوم تبليسي · يوم أنانوري/كازبيجي · بقية الأيام حسب طلبك</div>
-    <div class="toc">
-      <a href="#d1">اليوم 1 (23/9) — تبليسي</a>
-      <a href="#d2">اليوم 2 (24/9) — تبليسي → باتومي</a>
-      <a href="#d3">اليوم 3 (25/9) — باتومي</a>
-      <a href="#d4">اليوم 4 (26/9) — باتومي → كانيونات/أبانو → بورجومي</a>
-      <a href="#d5">اليوم 5 (27/9) — بورجومي → أنانوري/كازبيجي → تبليسي</a>
-      <a href="#d6">اليوم 6 (28/9) — تبليسي</a>
-      <a href="#d7">اليوم 7 (29/9) — تبليسي</a>
-      <a href="#d8">اليوم 8 (30/9) — المغادرة 2:00 صباحًا</a>
-    </div>
+
+<!-- Fixed Welcome Bar with single NAV button -->
+<div class="welcome" role="banner" aria-label="Welcome">
+  <div>
+    <div class="title">مرحبًا بك في خطة جورجيا الاحترافية (23–30 سبتمبر 2025)</div>
+    <div class="subtitle">باتومي في أفضل يومين طقسًا · تبليسي قاعدة الانطلاق · خرائط مدمجة ونصائح ملابس</div>
   </div>
-</header>
-<main>
+  <div class="actions">
+    <!-- Single top navigation button (NOT a menu) -->
+    <a class="topbtn accent" href="#d1" title="اذهب إلى اليوم الأول">ابدأ اليوم 1</a>
+  </div>
+</div>
 
-<section id="d1" class="card">
-  <h2>اليوم 1 — تبليسي (23 سبتمبر)</h2>
-  <div class="meta">🌤️ 14–24°C · 🏨 مبيت: تبليسي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط مفيدة</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>07:00–09:30</td>
-        <td>الوصول، استلام السيارة، إفطار في مقهى محلي بمنطقة تبليسي القديمة</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Tbilisi+Old+Town+breakfast" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Tbilisi+Old+Town+cafe+breakfast" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Tbilisi+Old+Town+best+cafes" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>09:30–12:00</td>
-        <td>جولة في المدينة القديمة: ميدان الحرية، شارع شارديني، برج الساعة، حمامات Chreli Abano</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Tbilisi+Old+Town+walk" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Chreli+Abano+Tbilisi" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Tbilisi+Old+Town+attractions" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>12:00–13:30</td>
-        <td>الغداء في مطعم جورجي تقليدي</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=best+Georgian+food+Tbilisi" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Georgian+restaurant+Tbilisi" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=best+Georgian+restaurant+in+Tbilisi" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>13:30–15:30</td>
-        <td>التنزه في Vake Park (ملاعب أطفال ومسارات مشي)</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Vake+Park+Tbilisi" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Vake+Park+Tbilisi" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Vake+Park+Tbilisi" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>15:30–17:30</td>
-        <td>زيارة National Botanical Garden</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=National+Botanical+Garden+of+Georgia" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/National+Botanical+Garden+Tbilisi" target="_blank">خرائط</a>
-          <a class="pill search" href="http://nbgg.ge" target="_blank">الموقع الرسمي</a>
-        </td>
-      </tr>
-      <tr>
-        <td>17:30–19:00</td>
-        <td>Mtatsminda Park: ألعاب ومشاهدة الغروب</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Mtatsminda+Park+Tbilisi" target="_blank">يوتيوب</a>
-          <a class="pill" href="https://park.ge" target="_blank">الموقع الرسمي</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Mtatsminda+Park" target="_blank">خرائط</a>
-        </td>
-      </tr>
-      <tr>
-        <td>19:30</td>
-        <td>عشاء مع إطلالة على المدينة</td>
-        <td class="links">
-          <a class="pill search" href="https://www.google.com/search?q=Tbilisi+best+view+restaurant" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20Old%20Town"></iframe>
-</section>
+<!-- Fixed Day Click Bar -->
+<nav class="daybar" aria-label="Days quick bar">
+  <a class="daytab" href="#d1">23/9 تبليسي</a>
+  <a class="daytab" href="#d2">24/9 تبليسي→باتومي</a>
+  <a class="daytab" href="#d3">25/9 باتومي</a>
+  <a class="daytab" href="#d4">26/9 باتومي→أودية→بورجومي</a>
+  <a class="daytab" href="#d5">27/9 بورجومي→أنانوري→كازبيجي→تبليسي</a>
+  <a class="daytab" href="#d6">28/9 تبليسي</a>
+  <a class="daytab" href="#d7">29/9 تبليسي</a>
+  <a class="daytab" href="#d8">30/9 المغادرة</a>
+  <a class="daytab" href="#drive">الطرق</a>
+  <a class="daytab" href="#tips">نصائح</a>
+</nav>
 
-<section id="d2" class="card">
-  <h2>اليوم 2 — تبليسي → باتومي (24 سبتمبر) — يوم باتومي 1</h2>
-  <div class="meta">🌞 ≈25°C مشمس · 🏨 مبيت: باتومي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط مفيدة</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>07:00–12:30</td>
-        <td>القيادة إلى باتومي (≈370 كم – ≈5.5 س) مع استراحات</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Tbilisi&daddr=Batumi" target="_blank">المسار</a>
-        </td>
-      </tr>
-      <tr>
-        <td>14:00–17:00</td>
-        <td>التنزه في Batumi Boulevard واستكشاف المدينة</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Batumi+Boulevard" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Batumi+Boulevard" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Batumi+Boulevard" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>17:00–19:00</td>
-        <td>زيارة Batumi Botanical Garden</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Batumi+Botanical+Garden" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Botanical+Garden+Batumi" target="_blank">خرائط</a>
-          <a class="pill search" href="http://www.bgb.ge" target="_blank">الموقع الرسمي</a>
-        </td>
-      </tr>
-      <tr>
-        <td>19:30</td>
-        <td>عشاء مأكولات بحرية</td>
-        <td class="links">
-          <a class="pill search" href="https://www.google.com/search?q=Best+seafood+restaurants+in+Batumi" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Tbilisi&daddr=Batumi"></iframe>
-</section>
+<div class="spacer-top"></div>
 
-<section id="d3" class="card">
-  <h2>اليوم 3 — باتومي (25 سبتمبر) — يوم باتومي 2</h2>
-  <div class="meta">⛅ 24–25°C · 🏨 مبيت: باتومي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط مفيدة</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>09:00–12:00</td>
-        <td>زيارة Mtirala National Park (مشي خفيف وسط الغابات)</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Mtirala+National+Park" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Mtirala+National+Park" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Mtirala+National+Park+Batumi" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>12:30–16:00</td>
-        <td>استراحة على شاطئ البحر الأسود / جولة داخل المدينة</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps/search/Batumi+Beach" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Things+to+do+in+Batumi" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-      <tr>
-        <td>17:00–19:00</td>
-        <td>زيارة Batumi Aquarium (ممتع للأطفال)</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Batumi+Aquarium" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Batumi+Aquarium" target="_blank">خرائط</a>
-          <a class="pill search" href="https://www.google.com/search?q=Batumi+Aquarium" target="_blank">بحث Google</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&q=Batumi%20Beach"></iframe>
-</section>
+<main class="grid">
 
-<section id="d4" class="card">
-  <h2>اليوم 4 — 26 سبتمبر — باتومي → كانيونات مارتفيلي وأوكاتسي → بحيرة أبانو → بورجومي (مبيت)</h2>
-  <div class="meta">🌥️ يوم طرق وأودية · 🏨 مبيت: بورجومي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط مفيدة</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>07:30–09:00</td>
-        <td>قيادة باتومي → Martvili Canyon (≈60–70 كم)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Batumi&daddr=Martvili%20Canyon" target="_blank">المسار</a></td>
-      </tr>
-      <tr>
-        <td>10:00–13:00</td>
-        <td>جولة بالقارب وشلالات في Martvili</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Martvili+Canyon+boat+tour" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Martvili%20Canyon" target="_blank">خرائط</a>
-        </td>
-      </tr>
-      <tr>
-        <td>13:00–14:30</td>
-        <td>غداء في مطعم محلي</td>
-        <td class="links"><a class="pill search" href="https://www.google.com/search?q=Restaurants+near+Martvili+Canyon" target="_blank">بحث Google</a></td>
-      </tr>
-      <tr>
-        <td>15:00–17:00</td>
-        <td>زيارة Okatse Canyon والمشي على الممرات المعلّقة</td>
-        <td class="links">
-          <a class="pill yt" href="https://www.youtube.com/results?search_query=Okatse+Canyon+walkway" target="_blank">يوتيوب</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Okatse%20Canyon" target="_blank">خرائط</a>
-        </td>
-      </tr>
-      <tr>
-        <td>17:00–19:30</td>
-        <td>الانطلاق باتجاه بحيرة أبانو ثم متابعة إلى بورجومي (مبيت)</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Okatse%20Canyon&daddr=Borjomi&waypoints=Abano%20Lake%20Georgia" target="_blank">المسار: أوكاتسي → أبانو → بورجومي</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Batumi&daddr=Borjomi&waypoints=Martvili%20Canyon|Okatse%20Canyon|Abano%20Lake%20Georgia"></iframe>
-</section>
+  <section id="why" class="card">
+    <h1>نظرة سريعة</h1>
+    <p class="muted">
+      رُتبت الأيام لتضع <strong>باتومي</strong> في أكثر أوقات الأسبوع دفئًا ومشمسًا (24–25 سبتمبر)،
+      ثم تعتمد <strong>تبليسي</strong> كقاعدة لباقي الجولات لخفض القيادة وتبديل الفنادق.
+    </p>
+    <div class="kpi">
+      <span>⭐ مناسب للعائلة</span>
+      <span>🏖️ شاطئ + 🌿 طبيعة + 🏛️ ثقافة</span>
+      <span>💶 ميزانية مرنة</span>
+      <span>🗺️ خرائط Google مدمجة</span>
+    </div>
+    <div class="badges">
+      <div class="badge ok">أفضل طقس للشاطئ: 24–25/9 (باتومي)</div>
+      <div class="badge warn">الجبال أبرد ليلًا (كازبيجي)</div>
+    </div>
+  </section>
 
-<section id="d5" class="card">
-  <h2>اليوم 5 — 27 سبتمبر — بورجومي → أنانوري (غداء نهري) → كازبيجي → تبليسي (مبيت)</h2>
-  <div class="meta">⛰️ يوم جبلي طويل · 🏨 مبيت: تبليسي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط مفيدة</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>08:00–11:00</td>
-        <td>بورجومي → أنانوري (≈160–180 كم)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Borjomi&daddr=Ananuri%20Fortress" target="_blank">المسار</a></td>
-      </tr>
-      <tr>
-        <td>11:00–12:30</td>
-        <td>جولة في قلعة أنانوري + قهوة بإطلالة خزان زينفالي</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps/search/Ananuri%20Fortress" target="_blank">خرائط</a>
-        </td>
-      </tr>
-      <tr>
-        <td>12:30–14:00</td>
-        <td>غداء على النهر/الخزان</td>
-        <td class="links">
-          <a class="pill search" href="https://www.google.com/search?q=Restaurants+by+Zhinvali+reservoir" target="_blank">مطاعم بجانب الماء</a>
-        </td>
-      </tr>
-      <tr>
-        <td>14:00–16:00</td>
-        <td>أنانوري → Stepantsminda (Kazbegi)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Ananuri%20Fortress&daddr=Stepantsminda" target="_blank">المسار</a></td>
-      </tr>
-      <tr>
-        <td>16:00–17:30</td>
-        <td>زيارة كنيسة Gergeti والمشي القصير</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps/search/Gergeti%20Trinity%20Church" target="_blank">Gergeti</a>
-        </td>
-      </tr>
-      <tr>
-        <td>17:30–20:30</td>
-        <td>العودة إلى تبليسي والمبيت</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Stepantsminda&daddr=Tbilisi" target="_blank">Kazbegi → تبليسي</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Borjomi&daddr=Tbilisi&waypoints=Ananuri%20Fortress|Stepantsminda"></iframe>
-</section>
+  <!-- Day 1 -->
+  <section id="d1" class="card">
+    <h2>23 سبتمبر — تبليسي (الوصول + المدينة القديمة)</h2>
+    <div class="muted">🌤️ 14–24°C · 👕 طبقات خفيفة · 🏨 مبيت: تبليسي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>07:00–09:30</td>
+          <td>الوصول، استلام السيارة، إفطار محلي</td>
+          <td>ابدأ بمقهى هادئ قرب ميدان الحرية. جرّب خاشابوري وخينكالي بنسخ صغيرة.</td>
+          <td class="links">
+            <a class="pill yt" href="https://www.youtube.com/results?search_query=Tbilisi+Old+Town+breakfast" target="_blank">يوتيوب</a>
+            <a class="pill maps" href="https://www.google.com/maps/search/Tbilisi+Old+Town+cafe+breakfast" target="_blank">خرائط</a>
+          </td>
+        </tr>
+        <tr>
+          <td>09:30–12:00</td>
+          <td>جولة البلدة القديمة</td>
+          <td>شارديني، برج الساعة، حمّامات Chreli Abano. طريق مريح ومناسب للعائلة.</td>
+          <td class="links">
+            <a class="pill maps" href="https://www.google.com/maps/search/Chreli+Abano+Tbilisi" target="_blank">خرائط</a>
+          </td>
+        </tr>
+        <tr>
+          <td>12:00–13:30</td>
+          <td>غداء جورجي تقليدي</td>
+          <td>شارك الأطباق لتذوق أكثر (تشاشوشولي/خينكالي/سلطات الجوز).</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Georgian+restaurant+Tbilisi" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>13:30–15:30</td>
+          <td>Vake Park</td>
+          <td>حديقة واسعة بمسارات مشي وملاعب—راحة ممتازة للأطفال.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Vake+Park+Tbilisi" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>15:30–17:30</td>
+          <td>National Botanical Garden</td>
+          <td>هدوء طبيعي داخل المدينة؛ شلالات صغيرة ومسارات مظللة. أحذية مريحة.</td>
+          <td class="links">
+            <a class="pill maps" href="https://www.google.com/maps/search/National+Botanical+Garden+Tbilisi" target="_blank">خرائط</a>
+          </td>
+        </tr>
+        <tr>
+          <td>17:30–19:00</td>
+          <td>Mtatsminda Park + غروب</td>
+          <td>تلفريك قصير لإطلالة بانورامية وألعاب للأطفال. سترة خفيفة مساءً.</td>
+          <td class="links">
+            <a class="pill" href="https://park.ge" target="_blank">الموقع</a>
+            <a class="pill maps" href="https://www.google.com/maps/search/Mtatsminda+Park" target="_blank">خرائط</a>
+          </td>
+        </tr>
+        <tr>
+          <td>19:30</td>
+          <td>عشاء بإطلالة</td>
+          <td>مطعم مرتفع لرؤية أضواء تبليسي. احجز مسبقًا للمجموعات.</td>
+          <td class="links"><a class="pill search" href="https://www.google.com/search?q=Tbilisi+best+view+restaurant" target="_blank">بحث</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20Old%20Town"></iframe>
+  </section>
 
-<section id="d6" class="card">
-  <h2>اليوم 6 — 28 سبتمبر — تبليسي (نشاطات مقترحة مملوءة بالكامل)</h2>
-  <div class="meta">⛅ 22–24°C · 🏨 مبيت: تبليسي</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>09:30–11:30</td>
-        <td>تلفريك قلعة ناركالا + جسر السلام</td>
-        <td class="links">
-          <a class="pill maps" href="https://www.google.com/maps/search/Narikala+Cable+Car+Tbilisi" target="_blank">ناركالا</a>
-          <a class="pill maps" href="https://www.google.com/maps/search/Bridge+of+Peace+Tbilisi" target="_blank">جسر السلام</a>
-        </td>
-      </tr>
-      <tr>
-        <td>12:00–14:00</td>
-        <td>غداء عصري في Fabrika أو حي Vera</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Fabrika+Tbilisi" target="_blank">Fabrika</a></td>
-      </tr>
-      <tr>
-        <td>15:00–17:00</td>
-        <td>بحيرة السلاحف (مشي خفيف/قوارب)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Turtle+Lake+Tbilisi" target="_blank">بحيرة السلاحف</a></td>
-      </tr>
-      <tr>
-        <td>17:30–19:30</td>
-        <td>متحف جورجيا الوطني أو معرض فني محلي</td>
-        <td class="links"><a class="pill search" href="https://www.google.com/search?q=Georgian+National+Museum+Tbilisi" target="_blank">بحث</a></td>
-      </tr>
-      <tr>
-        <td>مساءً</td>
-        <td>عشاء مع عرض فلكلور (اختياري)</td>
-        <td class="links"><a class="pill search" href="https://www.google.com/search?q=folk+dance+show+restaurant+Tbilisi" target="_blank">بحث</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20Bridge%20of%20Peace"></iframe>
-</section>
+  <!-- Day 2 -->
+  <section id="d2" class="card">
+    <h2>24 سبتمبر — تبليسي → باتومي (يوم باتومي 1)</h2>
+    <div class="muted">🌞 ≈25°C · 🏖️ شاطئ/طبقات خفيفة · 🏨 مبيت: باتومي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>07:00–12:30</td>
+          <td>القيادة إلى باتومي</td>
+          <td>انطلق مبكرًا لتصل الظهيرة. توقف لقهوة ووقود مرة واحدة على الأقل.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Tbilisi&daddr=Batumi" target="_blank">المسار</a></td>
+        </tr>
+        <tr>
+          <td>14:00–17:00</td>
+          <td>Batumi Boulevard</td>
+          <td>ممشى على البحر مع منحوتات وحدائق. مناسب لعربات الأطفال والدراجات.</td>
+          <td class="links">
+            <a class="pill maps" href="https://www.google.com/maps/search/Batumi+Boulevard" target="_blank">خرائط</a>
+          </td>
+        </tr>
+        <tr>
+          <td>17:00–19:00</td>
+          <td>الحديقة النباتية في باتومي</td>
+          <td>تشكيلة نباتات مطلة على البحر؛ مسارات متدرجة. أحذية مريحة وماء.</td>
+          <td class="links">
+            <a class="pill maps" href="https://www.google.com/maps/search/Botanical+Garden+Batumi" target="_blank">خرائط</a>
+            <a class="pill search" href="http://www.bgb.ge" target="_blank">الموقع</a>
+          </td>
+        </tr>
+        <tr>
+          <td>19:30</td>
+          <td>عشاء مأكولات بحرية</td>
+          <td>اختر مطعمًا على الواجهة البحرية. جرّب الأسماك المشوية والمحار.</td>
+          <td class="links"><a class="pill search" href="https://www.google.com/search?q=Best+seafood+restaurants+in+Batumi" target="_blank">بحث</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Tbilisi&daddr=Batumi"></iframe>
+  </section>
 
-<section id="d7" class="card">
-  <h2>اليوم 7 — 29 سبتمبر — تبليسي (مملوء بالكامل + التجهيز للسفر)</h2>
-  <div class="meta">⛅ 22–24°C · 🏨 مبيت: تبليسي (قريب من المطار مفضّل)</div>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>روابط</th></tr></thead>
-    <tbody>
-      <tr>
-        <td>10:00–12:00</td>
-        <td>سوق الجسر الجاف (تحف وهدايا)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Dry+Bridge+Market" target="_blank">Dry Bridge</a></td>
-      </tr>
-      <tr>
-        <td>12:30–14:00</td>
-        <td>غداء في وسط المدينة (Rustaveli/Liberty)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Rustaveli+restaurants+Tbilisi" target="_blank">مطاعم</a></td>
-      </tr>
-      <tr>
-        <td>15:00–17:00</td>
-        <td>حمّامات كبريتية/مساج للاسترخاء قبل الطيران</td>
-        <td class="links"><a class="pill" href="http://www.chreli-abano.ge" target="_blank">Chreli Abano</a></td>
-      </tr>
-      <tr>
-        <td>17:30–19:00</td>
-        <td>تسوّق أخير في Galleria Tbilisi</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Galleria+Tbilisi" target="_blank">Galleria</a></td>
-      </tr>
-      <tr>
-        <td>ليلاً</td>
-        <td>العودة للفندق وتجهيز الأمتعة — نوم مبكر (لأن الإقلاع 2:00 ص)</td>
-        <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Tbilisi+hotels+near+airport" target="_blank">فنادق قرب المطار</a></td>
-      </tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&q=Dry%20Bridge%20Market%20Tbilisi"></iframe>
-</section>
+  <!-- Day 3 -->
+  <section id="d3" class="card">
+    <h2>25 سبتمبر — باتومي (طبيعة وبحر)</h2>
+    <div class="muted">⛅ 24–25°C · 👟 أحذية مشي · 🏨 مبيت: باتومي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>09:00–12:00</td>
+          <td>Mtirala National Park</td>
+          <td>غابة مطيرة مصغّرة؛ مسار سهل مع شلالات صغيرة. انتبه للانزلاق.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Mtirala+National+Park" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>12:30–16:00</td>
+          <td>استراحة بحر/مدينة</td>
+          <td>شاطئ وحمام شمس أو مقهى على الساحل. واقي شمس وماء.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Batumi+Beach" target="_blank">الشاطئ</a></td>
+        </tr>
+        <tr>
+          <td>17:00–19:00</td>
+          <td>Batumi Aquarium</td>
+          <td>عرض أحياء بحرية للأطفال؛ زيارة قصيرة قبل العشاء.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Batumi+Aquarium" target="_blank">خرائط</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&q=Batumi%20Beach"></iframe>
+  </section>
 
-<section id="d8" class="card">
-  <h2>اليوم 8 — 30 سبتمبر — المغادرة (الإقلاع 2:00 صباحًا)</h2>
-  <table>
-    <thead><tr><th>الوقت</th><th>النشاط</th><th>تفاصيل</th></tr></thead>
-    <tbody>
-      <tr><td>23:00 (29/9)</td><td>التوجه إلى مطار تبليسي</td><td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Tbilisi+International+Airport" target="_blank">🗺️ المطار</a></td></tr>
-      <tr><td>02:00</td><td>الإقلاع</td><td class="note">تأكد من الأوزان والسوائل وجوازات السفر.</td></tr>
-    </tbody>
-  </table>
-  <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20International%20Airport"></iframe>
-</section>
+  <!-- Day 4 -->
+  <section id="d4" class="card">
+    <h2>26 سبتمبر — باتومي → Martvili & Okatse → بحيرة أبانو → بورجومي (مبيت)</h2>
+    <div class="muted">🌥️ طرق وأودية · 👟 أحذية ثابتة · 🏨 مبيت: بورجومي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>07:30–09:00</td>
+          <td>باتومي → Martvili Canyon</td>
+          <td>وادي أخضر بمياه صافية. جولة قارب حسب المنسوب.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Batumi&daddr=Martvili%20Canyon" target="_blank">المسار</a></td>
+        </tr>
+        <tr>
+          <td>10:00–13:00</td>
+          <td>Martvili — قوارب وشلالات</td>
+          <td>وقت مثالي للتصوير. خفّف الأمتعة وخذ حذاء مقاوم للماء إن أمكن.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Martvili%20Canyon" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>13:00–14:30</td>
+          <td>غداء محلي</td>
+          <td>اختصر الوقت—اطلب أطباق اليوم.</td>
+          <td class="links"><a class="pill search" href="https://www.google.com/search?q=Restaurants+near+Martvili+Canyon" target="_blank">بحث</a></td>
+        </tr>
+        <tr>
+          <td>15:00–17:00</td>
+          <td>Okatse Canyon</td>
+          <td>ممرات معلّقة وإطلالات عميقة—لا يُنصح لذوي رهاب المرتفعات.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Okatse%20Canyon" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>17:00–19:30</td>
+          <td>أوكانسي → بحيرة أبانو → بورجومي (مبيت)</td>
+          <td>محطة طبيعية سريعة عند أبانو ثم تابع إلى بورجومي للمبيت.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Okatse%20Canyon&daddr=Borjomi&waypoints=Abano%20Lake%20Georgia" target="_blank">المسار</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Batumi&daddr=Borjomi&waypoints=Martvili%20Canyon|Okatse%20Canyon|Abano%20Lake%20Georgia"></iframe>
+  </section>
 
-<footer class="note">
-  تم اختيار باتومي في 24–25/9 للأجواء الأكثر دفئًا وشمسًا ضمن الفترة 23–30/9. جميع الطرق والمسارات مضمنة كخرائط مدمجة، مع روابط يوتيوب/خرائط/بحث لكل نشاط.
-</footer>
+  <!-- Day 5 -->
+  <section id="d5" class="card">
+    <h2>27 سبتمبر — بورجومي → أنانوري (غداء نهري) → كازبيجي → تبليسي</h2>
+    <div class="muted">⛰️ جبال أبرد · 🧥 جاكيت رقيق · 🏨 مبيت: تبليسي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>08:00–11:00</td>
+          <td>بورجومي → أنانوري</td>
+          <td>طريق مريح نسبيًا. قهوة قصيرة قبل الوصول.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Borjomi&daddr=Ananuri%20Fortress" target="_blank">المسار</a></td>
+        </tr>
+        <tr>
+          <td>11:00–12:30</td>
+          <td>قلعة أنانوري + قهوة بإطلالة زينفالي</td>
+          <td>منظر الخزان رائع للصور العائلية. رياح خفيفة—جاكيت رقيق.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Ananuri%20Fortress" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>12:30–14:00</td>
+          <td>غداء على النهر/الخزان</td>
+          <td>اختر مطعمًا بجانب الماء لتجربة ممتعة.</td>
+          <td class="links"><a class="pill search" href="https://www.google.com/search?q=Restaurants+by+Zhinvali+reservoir" target="_blank">بحث</a></td>
+        </tr>
+        <tr>
+          <td>14:00–16:00</td>
+          <td>أنانوري → Stepantsminda (كازبيجي)</td>
+          <td>طريق جبلي بإطلالات خلابة؛ تحكم بالسرعة.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Ananuri%20Fortress&daddr=Stepantsminda" target="_blank">المسار</a></td>
+        </tr>
+        <tr>
+          <td>16:00–17:30</td>
+          <td>Gergeti Trinity Church</td>
+          <td>نقطة تصوير أسطورية للقوقاز. احمل ماء وجاكيت.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Gergeti%20Trinity%20Church" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>17:30–20:30</td>
+          <td>العودة إلى تبليسي</td>
+          <td>راحة عشاء خفيف والتهيؤ ليوم هادئ غدًا.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps?output=embed&f=d&saddr=Stepantsminda&daddr=Tbilisi" target="_blank">المسار</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&f=d&saddr=Borjomi&daddr=Tbilisi&waypoints=Ananuri%20Fortress|Stepantsminda"></iframe>
+  </section>
+
+  <!-- Day 6 -->
+  <section id="d6" class="card">
+    <h2>28 سبتمبر — تبليسي (يوم حضري مريح)</h2>
+    <div class="muted">⛅ 22–24°C · 👟 أحذية مريحة · 🏨 مبيت: تبليسي</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>09:30–11:30</td>
+          <td>تلفريك ناركالا + جسر السلام</td>
+          <td>جولة صور على النهر ومتحف صغير بالقرب إن رغبت.</td>
+          <td class="links">
+            <a class="pill maps" href="https://www.google.com/maps/search/Narikala+Cable+Car+Tbilisi" target="_blank">ناركالا</a>
+            <a class="pill maps" href="https://www.google.com/maps/search/Bridge+of+Peace+Tbilisi" target="_blank">جسر السلام</a>
+          </td>
+        </tr>
+        <tr>
+          <td>12:00–14:00</td>
+          <td>غداء عصري في Fabrika أو حي Vera</td>
+          <td>مطاعم ومقاهي شبابية—خيارات نباتية ومتعددة.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Fabrika+Tbilisi" target="_blank">Fabrika</a></td>
+        </tr>
+        <tr>
+          <td>15:00–17:00</td>
+          <td>بحيرة السلاحف</td>
+          <td>مشي خفيف/قوارب. قهوة مطلة على الماء.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Turtle+Lake+Tbilisi" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>17:30–19:30</td>
+          <td>متحف جورجيا الوطني أو معرض فني</td>
+          <td>خيار داخلي إذا كان الجو غائمًا/ماطرًا.</td>
+          <td class="links"><a class="pill search" href="https://www.google.com/search?q=Georgian+National+Museum+Tbilisi" target="_blank">بحث</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20Bridge%20of%20Peace"></iframe>
+  </section>
+
+  <!-- Day 7 -->
+  <section id="d7" class="card">
+    <h2>29 سبتمبر — تبليسي (تسوّق + استرخاء قبل السفر)</h2>
+    <div class="muted">⛅ خفيف · ♨️ حمّامات كبريتية · 🏨 مبيت: تبليسي (قرب المطار مُفضّل)</div>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>الوصف الاحترافي</th><th>روابط</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>10:00–12:00</td>
+          <td>سوق الجسر الجاف</td>
+          <td>تحف وهدايا محلية؛ افحص الجودة وراسل البائع إذا كان لديك أسئلة.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Dry+Bridge+Market" target="_blank">خرائط</a></td>
+        </tr>
+        <tr>
+          <td>12:30–14:00</td>
+          <td>غداء بوسط المدينة</td>
+          <td>شارع روستافيلي/ميدان الحرية—خيارات سريعة ومطاعم عائلية.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Rustaveli+restaurants+Tbilisi" target="_blank">مطاعم</a></td>
+        </tr>
+        <tr>
+          <td>15:00–17:00</td>
+          <td>حمّامات كبريتية/مساج</td>
+          <td>جلسة قصيرة للاسترخاء قبل الرحلة الليلية.</td>
+          <td class="links"><a class="pill" href="http://www.chreli-abano.ge" target="_blank">Chreli Abano</a></td>
+        </tr>
+        <tr>
+          <td>17:30–19:00</td>
+          <td>تسوّق أخير في Galleria Tbilisi</td>
+          <td>اقتناء هدايا خفيفة ووجبة خفيفة.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Galleria+Tbilisi" target="_blank">Galleria</a></td>
+        </tr>
+        <tr>
+          <td>ليلاً</td>
+          <td>العودة للفندق وتجهيز الأمتعة</td>
+          <td>نوم مبكّر لأن الإقلاع الساعة 2:00 صباح 30/9.</td>
+          <td class="links"><a class="pill maps" href="https://www.google.com/maps/search/Tbilisi+hotels+near+airport" target="_blank">فنادق قرب المطار</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&q=Dry%20Bridge%20Market%20Tbilisi"></iframe>
+  </section>
+
+  <!-- Day 8 -->
+  <section id="d8" class="card">
+    <h2>30 سبتمبر — المغادرة (الإقلاع 2:00 صباحًا)</h2>
+    <table class="table">
+      <thead><tr><th>الوقت</th><th>النشاط</th><th>تفاصيل</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>23:00 (29/9)</td>
+          <td>التوجه إلى مطار تبليسي</td>
+          <td>تحقق من الوزن والسوائل والوثائق.</td>
+        </tr>
+        <tr>
+          <td>02:00</td>
+          <td>الإقلاع</td>
+          <td>رحلة موفقة ✈️</td>
+        </tr>
+      </tbody>
+    </table>
+    <iframe class="map" src="https://www.google.com/maps?output=embed&q=Tbilisi%20International%20Airport"></iframe>
+  </section>
+
+  <!-- Drive Summary -->
+  <section id="drive" class="card">
+    <h2>ملخص الطرق والمسافات</h2>
+    <table class="table">
+      <thead><tr><th>المسار</th><th>كم تقريبًا</th><th>الوقت</th><th>ملاحظات</th></tr></thead>
+      <tbody>
+        <tr><td>تبليسي → باتومي</td><td>≈370</td><td>≈5.5 س</td><td>توقف واحد على الأقل</td></tr>
+        <tr><td>باتومي → Martvili → Okatse → أبانو → بورجومي</td><td>≈260</td><td>≈5–6 س</td><td>طرق ريفية/مناظر</td></tr>
+        <tr><td>بورجومي → أنانوري → كازبيجي → تبليسي</td><td>≈320</td><td>≈6–7 س</td><td>جبال—أبطأ قليلًا</td></tr>
+      </tbody>
+    </table>
+    <p class="foot">جميع الأزمنة تقريبية وقد تتغيّر حسب حالة المرور والطقس.</p>
+  </section>
+
+  <!-- Tips at END -->
+  <section id="tips" class="card">
+    <h2>نصائح السفر الاحترافية (في نهاية الصفحة)</h2>
+    <div class="three">
+      <div class="wear">
+        <h3>المال والاتصال</h3>
+        <ul class="list">
+          <li>العملة: GEL (اللاري الجورجي)؛ البطاقات مقبولة في المدن.</li>
+          <li>SIM محلية أو eSIM—واحفظ الخرائط Offline قبل الانطلاق.</li>
+        </ul>
+      </div>
+      <div class="wear">
+        <h3>القيادة</h3>
+        <ul class="list">
+          <li>توقف كل 90–120 دقيقة. راقب الوقود مبكرًا خارج المدن.</li>
+          <li>في الجبال: تحكم بالسرعة وتابع الطقس والانزلاقات.</li>
+        </ul>
+      </div>
+      <div class="wear">
+        <h3>العائلة والراحة</h3>
+        <ul class="list">
+          <li>وجبات خفيفة، مياه، شاحن متنقل، مناديل، إسعافات أولية.</li>
+          <li>وزّع الأنشطة الخارجية وقت الظهر حيث الحرارة أعلى.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
 </main>
+
+<script>
+  // Highlight active day tab while scrolling
+  const sections = [...document.querySelectorAll('section[id]')];
+  const tabs= [...document.querySelectorAll('.daybar .daytab')];
+  const idToTab = new Map();
+  tabs.forEach(t => idToTab.set(t.getAttribute('href').slice(1), t));
+
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        if(idToTab.has(id)){
+          tabs.forEach(t=>t.classList.remove('active'));
+          idToTab.get(id).classList.add('active');
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
+
+  sections.forEach(s=>obs.observe(s));
+</script>
+
 </body>
-</html>
+                                                                               </html>￼Enter file contents here
